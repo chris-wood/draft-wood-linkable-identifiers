@@ -1,20 +1,4 @@
-# Linkable Identifiers
-
-This is the working area for the Individual internet-draft, "Linkable Identifiers".
-
-## Building the Draft
-
-Formatted text and HTML versions of the draft can be built using `make`.
-
-```sh
-$ make
-```
-
-This requires that you have the necessary software installed.  See [the
-instructions](https://github.com/martinthomson/i-d-template/blob/master/doc/SETUP.md).
-
-
-## Contributing
+# Contributing
 
 Before submitting feedback, please familiarize yourself with our current issues
 list and review the [working group
@@ -87,4 +71,3 @@ process, as documented in Best Current Practices RFCs and IESG Statements.
 
 A participant in any IETF activity acknowledges that written, audio and video
 records of meetings may be made and may be available to the public.
-
