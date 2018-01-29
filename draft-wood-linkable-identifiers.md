@@ -119,6 +119,10 @@ XXX: include other link layer types from DHCP spec?
 
 Others: IMAP, LDAP, IKE/ESP, SRTP, oath, SIP, SSH, SNMP, ICMP, ARP
 
+
+
+say "increases the complexity" as opposed to "reduces linkability" because, as a measurement geek, I'm deeply pessimistic about the ability to eliminate linkability of packets sent by the same sender. After you have added a runtime requirement to keep some amount of per-flow state in order to link packets to a flow, any additional complexity in packet number obfuscation only serves to increase the amount of work to design an algorithm for linking packets, i.e., it increases the number of masters' and/or doctoral degrees awarded to people who work on solving the problem of linking QUIC flows.)
+
 # IANA Considerations
 
 This document has on request to IANA.
