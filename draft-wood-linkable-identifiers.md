@@ -201,7 +201,8 @@ TCP source port.
 In contrast, path linkability is more difficult to achieve, as it requires using fresh identifiers 
 for each protocol field. (This may not always be technically feasible.) Moreover, protocols such
 as QUIC explicitly try to enable path linkability via connection-level identifiers (CIDs) to support 
-multihoming endpoints. This makes path linkability impossible to mitigate.
+multihoming endpoints. This makes path linkability impossible to mitigate. However, as multiple,
+disjoint paths may be operated by different entities, it may be the case that collusion is less common.
 
 # Timing Considerations
 
