@@ -22,7 +22,7 @@ author:
     email: cawood@apple.com
 
 normative:
-    RFC793:
+    RFC0793:
     RFC2508:
     RFC6824:
     RFC6973:
@@ -73,48 +73,28 @@ survey protocols developed inside the IETF and out, and identify their sticky id
 were obtained by analyzing protocol documentation and specifications, and also scanning packet 
 traces captured from protocols in practice on common systems.
 
-# Limiting Linkable Identifiers
+# Identifier Scope and Threat Model
 
-The introductory example illustrating packet linkability using MAC addresses is one of many 
-possible ways in which an attacker may link packets. As another hypothetical example, assume that 
-IP address and MAC addresses were properly rotated. Moreover, assume TLS session IDs were reused 
-over time, as shown below.
+Not all packet or datagram identifiers are visible end-to-end. For example, MAC addresses are only
+visible on local subnets. IP addresses are only visible between endpoints. (In systems such as Tor,
+source and destination addresses change at each circuit hop.) Thus, threats to identifier linkability
+depend on the threat model under consideration. Off-path adversaries are generally not a problem since
+they do not have access to datagrams in flight. On-path adversaries may exist at various locations 
+relative to an endpoint (sender or receiver) on a path, e.g., in a local subnet, as an intermediate router 
+or middlebox between two endpoints, or as a TLS terminating reverse proxy. In this document, we categorize 
+these three types of adversaries as follows:
 
-~~~
-+---------------+        +---------------+
-|TLS SessionID X<-------->TLS SessionID X|
-+---------------+        +---------------+
-|      ...      |  ....  |      ...      |
-+---------------+        +---------------+
-| IP Address  A <---//---> IP Address  B |
-+---------------+        +---------------+
-| MAC Address A <---//---> MAC Address C |
-+---------------+        +---------------+
-
-+------------------------------------------>
-                  time
-~~~
-
-Despite rotating all protocol identifiers beneath TLS, a static session identifier makes packet 
-linkability trivial. 
-Thus, a strict, yet safe rule for removing packet linkability is to rotate all identifiers in 
-unison. 
-Unfortunately, this strategy is problematic in practice. 
-
-XXX: describe why — involves cutting off connections, possibly. Need to align rotation events to 
-minimize or limit linkability leakage: if identifier at layer (N) changes, then identifiers at 
-layer (N - 1) and below should also change. (If TLS session ID changes for resumption, then all IP 
-address, TCP port, Ethernet MAC address, etc. should also rotate)
-
-XXX: discuss difference in linkability across time and space (multiple paths). time is easier to 
-enforce. space is harder to accomplish.
+1. Local: An on-path adversary belonging to the same local subnet as an endpoint, a switch.
+2. Intermediate: An on-path adversary that observes datagrams in flight but does not
+terminate a (TCP or TLS) connection, e.g., a middlebox or performance enhancing proxy (PEP).
+3. Terminator: An on-path adversary that terminates a connection, e.g., a TLS-terminating reverse proxy.
 
 # Sticky Protocol Identifiers
 
 In this section, we survey existing protocols developed inside and out of the IETF, and identify 
 sticky protocol identifiers for each. A stick identifier is one that does not change across 
-protocol “sessions,” regardless of whether it is transmitted in the clear or not. This may include 
-state issued XXXy servers or, commonly, client algorithm, software configuration, or 
+protocol "sessions," regardless of whether it is transmitted in the clear or not. This may include 
+state-generating servers or, commonly, client algorithm, software configuration, or 
 device-specific fields. We categorize surveyed protocols by OSI layer at which they operate. 
 Specifically, we focus on Link, Internet, Transport, Session, and Application layers. (Our taxonomy 
 may not match traditional OSI models, though we consider it sufficiently representative.)
@@ -132,7 +112,7 @@ XXX: include other link layer types from DHCP spec?
 
 ## Transport Layer
 
-- TCP {{RFC793}}: TCP source ports may be sticky if reused across senders. For example,
+- TCP {{RFC0793}}: TCP source ports may be sticky if reused across senders. For example,
 most operating systems allocate allocate ephemeral (short lived) ports to each new 
 connection. Per IANA allocations, ephemeral ports range from 49152 to 65535 (2^15+2^14 to 2^16−1) 
 [http://www.iana.org/assignments/port-numbers]. However, this does not prevent an application
@@ -176,36 +156,72 @@ Origin Timestamp, Receive Timestamp)
 
 - IMAP: username/password login...
 
-
 Others: IMAP, LDAP, IKE/ESP, SRTP, oath, SIP, SSH, SNMP, ICMP, ARP
 
+# Limiting Linkable Identifiers
+
+The introductory example illustrating packet linkability using MAC addresses is one of many 
+possible ways in which an attacker may link packets. As another hypothetical example, assume that 
+IP address and MAC addresses were properly rotated. Moreover, assume TLS session IDs were reused 
+over time, as shown below.
+
+~~~
++---------------+        +---------------+
+|TLS SessionID X<-------->TLS SessionID X|
++---------------+        +---------------+
+|      ...      |  ....  |      ...      |
++---------------+        +---------------+
+| IP Address  A <---//---> IP Address  B |
++---------------+        +---------------+
+| MAC Address A <---//---> MAC Address C |
++---------------+        +---------------+
+
++------------------------------------------>
+                  time
+~~~
+
+Despite rotating all protocol identifiers beneath TLS, a static session identifier makes packet 
+linkability trivial. Thus, a strict, yet safe rule for removing packet linkability is to rotate 
+all identifiers in unison. Unfortunately, this strategy is problematic in practice. It would
+imply terminating active connections whenever an identifier changes (otherwise, linkability remains trivial). 
+If MAC addresses are rotated on a regular basis, e.g., every 15 minutes, then connection lifetimes 
+are bounded by this window.
+
+Moreover, there are multiple dimensions along which identifiers may be linked: in time, as identifiers
+are used and re-used by senders, and space, as identifiers are duplicated across multiple disjoint
+network paths. We refer to these dimensions as time and path linkability, respectively. 
+
+Time linkability is arguably simpler to mitigate, since new connections over time may opt to use
+new identifiers. For example, instead of resuming a TLS session with an existing session ID, a
+client may initiate a fresh handshake. In contrast, path linkability is more difficult to achieve, 
+as it requires 
+
+
+XXX: describe why — involves cutting off connections, possibly. Need to align rotation events to 
+minimize or limit linkability leakage: if identifier at layer (N) changes, then identifiers at 
+layer (N - 1) and below should also change. (If TLS session ID changes for resumption, then all IP 
+address, TCP port, Ethernet MAC address, etc. should also rotate)
+
+XXX: discuss difference in linkability across time and space (multiple paths). time is easier to 
+enforce. space is harder to accomplish.
 
 # Timing Considerations
 
 Advice in this document SHOULD NOT be interpreted as guarantees for preventing linkability. Rather,
-they aim to increase linkability complexity. 
-
-
-Consider, for example, an application using QUIC to send
-data to a peer. If the sender invokes a voluntary path change, thereby obtaining a new source port
-and, presumably, using a new connection ID, 
-
-
-XXX:
-say "increases the complexity" as opposed to "reduces linkability" because, as a measurement geek, 
-I'm deeply pessimistic about the ability to eliminate linkability of packets sent by the same 
-sender. After you have added a runtime requirement to keep some amount of per-flow state in order 
-to link packets to a flow, any additional complexity in packet number obfuscation only serves to 
-increase the amount of work to design an algorithm for linking packets, i.e., it increases the 
-number of masters' and/or doctoral degrees awarded to people who work on solving the problem of 
-linking QUIC flows.)
-
+they aim to increase linkability complexity. It is difficult to prevent path-linkability without
+modifying protocols above the layer at which identifiers rotate. For example, assuming MPTCP subflows
+were unlinkable across paths, shared transport state controlling the rate of data transmission may
+be sufficient to link these flows. 
 
 # IANA Considerations
 
-This document has on request to IANA.
+This document has no request to IANA.
 
 # Security Considerations
+
+TODO
+
+# Privacy Considerations
 
 TODO
 

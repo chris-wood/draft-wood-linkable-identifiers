@@ -281,28 +281,31 @@ address {
 /*]]>*/</style>
 
 
-  <link href="#rfc.toc" rel="Contents"/>
-<link href="#rfc.section.1" rel="Chapter" title="1 Introduction"/>
-<link href="#rfc.section.2" rel="Chapter" title="2 Limiting Linkable Identifiers"/>
-<link href="#rfc.section.3" rel="Chapter" title="3 Sticky Protocol Identifiers"/>
-<link href="#rfc.section.3.1" rel="Chapter" title="3.1 Link Layer"/>
-<link href="#rfc.section.3.2" rel="Chapter" title="3.2 Internet Layer"/>
-<link href="#rfc.section.3.3" rel="Chapter" title="3.3 Transport Layer"/>
-<link href="#rfc.section.3.4" rel="Chapter" title="3.4 Session Layer"/>
-<link href="#rfc.section.3.5" rel="Chapter" title="3.5 Application Layer:"/>
-<link href="#rfc.section.4" rel="Chapter" title="4 IANA Considerations"/>
-<link href="#rfc.section.5" rel="Chapter" title="5 Security Considerations"/>
-<link href="#rfc.section.6" rel="Chapter" title="6 Acknowledgments"/>
-<link href="#rfc.references" rel="Chapter" title="7 Normative References"/>
-<link href="#rfc.authors" rel="Chapter"/>
+  <link href="#rfc.toc" rel="Contents">
+<link href="#rfc.section.1" rel="Chapter" title="1 Introduction">
+<link href="#rfc.section.2" rel="Chapter" title="2 Identifier Scope and Threat Model">
+<link href="#rfc.section.3" rel="Chapter" title="3 Sticky Protocol Identifiers">
+<link href="#rfc.section.3.1" rel="Chapter" title="3.1 Link Layer">
+<link href="#rfc.section.3.2" rel="Chapter" title="3.2 Internet Layer">
+<link href="#rfc.section.3.3" rel="Chapter" title="3.3 Transport Layer">
+<link href="#rfc.section.3.4" rel="Chapter" title="3.4 Session Layer">
+<link href="#rfc.section.3.5" rel="Chapter" title="3.5 Application Layer:">
+<link href="#rfc.section.4" rel="Chapter" title="4 Limiting Linkable Identifiers">
+<link href="#rfc.section.5" rel="Chapter" title="5 Timing Considerations">
+<link href="#rfc.section.6" rel="Chapter" title="6 IANA Considerations">
+<link href="#rfc.section.7" rel="Chapter" title="7 Security Considerations">
+<link href="#rfc.section.8" rel="Chapter" title="8 Privacy Considerations">
+<link href="#rfc.section.9" rel="Chapter" title="9 Acknowledgments">
+<link href="#rfc.references" rel="Chapter" title="10 Normative References">
+<link href="#rfc.authors" rel="Chapter">
 
 
-  <meta name="generator" content="xml2rfc version 2.5.2 - http://tools.ietf.org/tools/xml2rfc" />
+  <meta name="generator" content="xml2rfc version 2.8.5 - https://tools.ietf.org/tools/xml2rfc" />
   <link rel="schema.dct" href="http://purl.org/dc/terms/" />
 
   <meta name="dct.creator" content="Wood, C." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-wood-linkable-identifiers-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2018-1-26" />
+  <meta name="dct.issued" scheme="ISO8601" content="2018-2-01" />
   <meta name="dct.abstract" content="TODO" />
   <meta name="description" content="TODO" />
 
@@ -314,20 +317,20 @@ address {
     <tbody>
     
     	<tr>
-  <td class="left">Network Working Group</td>
-  <td class="right">C. Wood</td>
+<td class="left">Network Working Group</td>
+<td class="right">C. Wood</td>
 </tr>
 <tr>
-  <td class="left">Internet-Draft</td>
-  <td class="right">Apple Inc.</td>
+<td class="left">Internet-Draft</td>
+<td class="right">Apple Inc.</td>
 </tr>
 <tr>
-  <td class="left">Intended status: Informational</td>
-  <td class="right">January 26, 2018</td>
+<td class="left">Intended status: Informational</td>
+<td class="right">February 01, 2018</td>
 </tr>
 <tr>
-  <td class="left">Expires: July 30, 2018</td>
-  <td class="right"></td>
+<td class="left">Expires: August 5, 2018</td>
+<td class="right"></td>
 </tr>
 
     	
@@ -337,47 +340,62 @@ address {
   <p class="title">Linkable Identifiers<br />
   <span class="filename">draft-wood-linkable-identifiers-latest</span></p>
   
-  <h1 id="rfc.abstract">
-  <a href="#rfc.abstract">Abstract</a>
-</h1>
+  <h1 id="rfc.abstract"><a href="#rfc.abstract">Abstract</a></h1>
 <p>TODO</p>
-<h1 id="rfc.status">
-  <a href="#rfc.status">Status of This Memo</a>
-</h1>
+<h1 id="rfc.status"><a href="#rfc.status">Status of This Memo</a></h1>
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
-<p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
+<p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at https://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on July 30, 2018.</p>
-<h1 id="rfc.copyrightnotice">
-  <a href="#rfc.copyrightnotice">Copyright Notice</a>
-</h1>
+<p>This Internet-Draft will expire on August 5, 2018.</p>
+<h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
 <p>Copyright (c) 2018 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
-<p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (http://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
+<p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (https://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
 
   
   <hr class="noprint" />
   <h1 class="np" id="rfc.toc"><a href="#rfc.toc">Table of Contents</a></h1>
   <ul class="toc">
 
-  	<li>1.   <a href="#rfc.section.1">Introduction</a></li>
-<li>2.   <a href="#rfc.section.2">Limiting Linkable Identifiers</a></li>
-<li>3.   <a href="#rfc.section.3">Sticky Protocol Identifiers</a></li>
-<ul><li>3.1.   <a href="#rfc.section.3.1">Link Layer</a></li>
-<li>3.2.   <a href="#rfc.section.3.2">Internet Layer</a></li>
-<li>3.3.   <a href="#rfc.section.3.3">Transport Layer</a></li>
-<li>3.4.   <a href="#rfc.section.3.4">Session Layer</a></li>
-<li>3.5.   <a href="#rfc.section.3.5">Application Layer:</a></li>
-</ul><li>4.   <a href="#rfc.section.4">IANA Considerations</a></li>
-<li>5.   <a href="#rfc.section.5">Security Considerations</a></li>
-<li>6.   <a href="#rfc.section.6">Acknowledgments</a></li>
-<li>7.   <a href="#rfc.references">Normative References</a></li>
-<li><a href="#rfc.authors">Author's Address</a></li>
+  	<li>1.   <a href="#rfc.section.1">Introduction</a>
+</li>
+<li>2.   <a href="#rfc.section.2">Identifier Scope and Threat Model</a>
+</li>
+<li>3.   <a href="#rfc.section.3">Sticky Protocol Identifiers</a>
+</li>
+<ul><li>3.1.   <a href="#rfc.section.3.1">Link Layer</a>
+</li>
+<li>3.2.   <a href="#rfc.section.3.2">Internet Layer</a>
+</li>
+<li>3.3.   <a href="#rfc.section.3.3">Transport Layer</a>
+</li>
+<li>3.4.   <a href="#rfc.section.3.4">Session Layer</a>
+</li>
+<li>3.5.   <a href="#rfc.section.3.5">Application Layer:</a>
+</li>
+</ul><li>4.   <a href="#rfc.section.4">Limiting Linkable Identifiers</a>
+</li>
+<li>5.   <a href="#rfc.section.5">Timing Considerations</a>
+</li>
+<li>6.   <a href="#rfc.section.6">IANA Considerations</a>
+</li>
+<li>7.   <a href="#rfc.section.7">Security Considerations</a>
+</li>
+<li>8.   <a href="#rfc.section.8">Privacy Considerations</a>
+</li>
+<li>9.   <a href="#rfc.section.9">Acknowledgments</a>
+</li>
+<li>10.   <a href="#rfc.references">Normative References</a>
+</li>
+<li><a href="#rfc.authors">Author's Address</a>
+</li>
 
 
   </ul>
 
-  <h1 id="rfc.section.1"><a href="#rfc.section.1">1.</a> <a href="#introduction" id="introduction">Introduction</a></h1>
-<p id="rfc.section.1.p.1">Privacy is an increasingly important topic in networks and protocols. <a href="#RFC6973">[RFC6973]</a> defines correlation of information relevant to or associated with a specific user as a significant attack on privacy. Such information can be exposed at any network stack layer. For example, a MAC address, if not properly rotated or randomized, may be used to link network packets to a single device. Many standards suggest randomizing or otherwise rotating such identifiers on a regular basis. Often, such advice is followed by recommendations to change other identifiers, e.g., IP addresses, host names, etc., in unison. For example, Huitema et al. <a href="#I-D.ietf-dnssd-privacy">[I-D.ietf-dnssd-privacy]</a> say, &#8220;it is important that the obfuscation of instance names is performed at the right time, and that the obfuscated names change in synchrony with other identifiers, such as MAC Addresses, IP Addresses or host names.&#8221; Consider the following example where this advice is not followed, wherein an IP address is changed yet the MAC address is not.</p>
+  <h1 id="rfc.section.1">
+<a href="#rfc.section.1">1.</a> <a href="#introduction" id="introduction">Introduction</a>
+</h1>
+<p id="rfc.section.1.p.1">Privacy is an increasingly important topic in networks and protocols. <a href="#RFC6973" class="xref">[RFC6973]</a> defines correlation of information relevant to or associated with a specific user as a significant attack on privacy. Such information can be exposed at any network stack layer. For example, a MAC address, if not properly rotated or randomized, may be used to link network packets to a single device. Many standards suggest randomizing or otherwise rotating such identifiers on a regular basis. Often, such advice is followed by recommendations to change other identifiers, e.g., IP addresses, host names, etc., in unison. For example, Huitema et al. <a href="#I-D.ietf-dnssd-privacy" class="xref">[I-D.ietf-dnssd-privacy]</a> say, &#8220;it is important that the obfuscation of instance names is performed at the right time, and that the obfuscated names change in synchrony with other identifiers, such as MAC Addresses, IP Addresses or host names.&#8221; Consider the following example where this advice is not followed, wherein an IP address is changed yet the MAC address is not.</p>
 <pre>
 +---------------+        +---------------+
 |      ...      |  ....  |      ...      |
@@ -391,8 +409,69 @@ address {
                   time
 </pre>
 <p id="rfc.section.1.p.2">An adversary may trivially link these packets together. In this document, we outline simple rules that SHOULD be followed by protocol implementations to avoid such trivial linkability. We then survey protocols developed inside the IETF and out, and identify their sticky identifiers. Results were obtained by analyzing protocol documentation and specifications, and also scanning packet traces captured from protocols in practice on common systems.</p>
-<h1 id="rfc.section.2"><a href="#rfc.section.2">2.</a> <a href="#limiting-linkable-identifiers" id="limiting-linkable-identifiers">Limiting Linkable Identifiers</a></h1>
-<p id="rfc.section.2.p.1">The introductory example illustrating packet linkability using MAC addresses is one of many possible ways in which an attacker may link packets. As another hypothetical example, assume that IP address and MAC addresses were properly rotated. Moreover, assume TLS session IDs were reused over time, as shown below.</p>
+<h1 id="rfc.section.2">
+<a href="#rfc.section.2">2.</a> <a href="#identifier-scope-and-threat-model" id="identifier-scope-and-threat-model">Identifier Scope and Threat Model</a>
+</h1>
+<p id="rfc.section.2.p.1">Not all packet or datagram identifiers are visible end-to-end. For example, MAC addresses are only visible on local subnets. IP addresses are only visible between endpoints. (In systems such as Tor, source and destination addresses change at each circuit hop.) Thus, threats to identifier linkability depend on the threat model under consideration. Off-path adversaries are generally not a problem since they do not have access to datagrams in flight. On-path adversaries may exist at various locations relative to an endpoint (sender or receiver) on a path, e.g., in a local subnet, as an intermediate router or middlebox between two endpoints, or as a TLS terminating reverse proxy. In this document, we categorize these three types of adversaries as follows:</p>
+<p></p>
+
+<ol>
+<li>Local: An on-path adversary belonging to the same local subnet as an endpoint, a switch.</li>
+<li>Intermediate: An on-path adversary that observes datagrams in flight but does not terminate a (TCP or TLS) connection, e.g., a middlebox or performance enhancing proxy (PEP).</li>
+<li>Terminator: An on-path adversary that terminates a connection, e.g., a TLS-terminating reverse proxy.</li>
+</ol>
+<h1 id="rfc.section.3">
+<a href="#rfc.section.3">3.</a> <a href="#sticky-protocol-identifiers" id="sticky-protocol-identifiers">Sticky Protocol Identifiers</a>
+</h1>
+<p id="rfc.section.3.p.1">In this section, we survey existing protocols developed inside and out of the IETF, and identify sticky protocol identifiers for each. A stick identifier is one that does not change across protocol &#8220;sessions,&#8221; regardless of whether it is transmitted in the clear or not. This may include state-generating servers or, commonly, client algorithm, software configuration, or device-specific fields. We categorize surveyed protocols by OSI layer at which they operate.  Specifically, we focus on Link, Internet, Transport, Session, and Application layers. (Our taxonomy may not match traditional OSI models, though we consider it sufficiently representative.)</p>
+<h1 id="rfc.section.3.1">
+<a href="#rfc.section.3.1">3.1.</a> <a href="#link-layer" id="link-layer">Link Layer</a>
+</h1>
+<p id="rfc.section.3.1.p.1">XXX: address</p>
+<p id="rfc.section.3.1.p.2">Ethernet: MAC address XXX: include other link layer types from DHCP spec?</p>
+<h1 id="rfc.section.3.2">
+<a href="#rfc.section.3.2">3.2.</a> <a href="#internet-layer" id="internet-layer">Internet Layer</a>
+</h1>
+<p></p>
+
+<ul><li>IPv4 and IPv6: address</li></ul>
+<h1 id="rfc.section.3.3">
+<a href="#rfc.section.3.3">3.3.</a> <a href="#transport-layer" id="transport-layer">Transport Layer</a>
+</h1>
+<p></p>
+
+<ul>
+<li>TCP <a href="#RFC0793" class="xref">[RFC0793]</a>: TCP source ports may be sticky if reused across senders. For example, most operating systems allocate allocate ephemeral (short lived) ports to each new connection. Per IANA allocations, ephemeral ports range from 49152 to 65535 (2^15+2^14 to 2^16&#8722;1) [http://www.iana.org/assignments/port-numbers]. However, this does not prevent an application from re-using port across connections. Destination are also intentionally sticky, since they identify services offered by endpoints. Therefore, reusing a destination port does not lead to decreased linkability.</li>
+<li>MPTCP <a href="#RFC6824" class="xref">[RFC6824]</a>: Connection tokens or IDs are explicitly used to link MPTCP subflows between IP address pairs. These tokens are only exposed during flow management operations, e.g., when creating new subflows. Normal data transfer uses TCP sequence numbers to bypass middlebox interference and an additional data sequence number (DSN) TCP option to allow receivers to deal with out-of-order subflow packet arrival. The union of packet DSNs across subflows should yield a contiguous packet number sequence.</li>
+<li>SCTP: multihome (IP sending addresses in INIT chunks, this is not a mandatory parameter as per RFC4960), Initiate tag (used across multiple addresses), Address Families</li>
+<li>RTP: application performance reporting</li>
+</ul>
+<h1 id="rfc.section.3.4">
+<a href="#rfc.section.3.4">3.4.</a> <a href="#session-layer" id="session-layer">Session Layer</a>
+</h1>
+<p></p>
+
+<ul>
+<li>TLS: session IDs, and possibly algorithms (though the space of possible values is large here), DTLS 1.3 connection IDs</li>
+<li>QUIC: connection ID</li>
+</ul>
+<h1 id="rfc.section.3.5">
+<a href="#rfc.section.3.5">3.5.</a> <a href="#application-layer" id="application-layer">Application Layer:</a>
+</h1>
+<p></p>
+
+<ul>
+<li>HTTP ((CITE)): Cookies are sticky identifiers created chosen by servers to carry application state across requests. Cookies might contain information about client identity or authentication preferences</li>
+<li>DNS: SRV hostnames</li>
+<li>DHCP: broadcast discover requests, hardware type, client hardware address, IP addresses (http://www.networksorcery.com/enp/protocol/dhcp.htm), transaction identifier</li>
+<li>NTP: (mode 3 &#8212; client to server, https://tools.ietf.org/html/draft-ietf-ntp-data-minimization-01#section-3): Timestamps, poll field, precision field, all other fields (Stratum, Root Delay, Root Dispersion, Ref ID, Ref Timestamp, Origin Timestamp, Receive Timestamp)</li>
+<li>IMAP: username/password login&#8230;</li>
+</ul>
+<p id="rfc.section.3.5.p.2">Others: IMAP, LDAP, IKE/ESP, SRTP, oath, SIP, SSH, SNMP, ICMP, ARP</p>
+<h1 id="rfc.section.4">
+<a href="#rfc.section.4">4.</a> <a href="#limiting-linkable-identifiers" id="limiting-linkable-identifiers">Limiting Linkable Identifiers</a>
+</h1>
+<p id="rfc.section.4.p.1">The introductory example illustrating packet linkability using MAC addresses is one of many possible ways in which an attacker may link packets. As another hypothetical example, assume that IP address and MAC addresses were properly rotated. Moreover, assume TLS session IDs were reused over time, as shown below.</p>
 <pre>
 +---------------+        +---------------+
 |TLS SessionID X&lt;--------&gt;TLS SessionID X|
@@ -407,79 +486,65 @@ address {
 +------------------------------------------&gt;
                   time
 </pre>
-<p id="rfc.section.2.p.2">Despite rotating all protocol identifiers beneath TLS, a static session identifier makes packet linkability trivial.  Thus, a strict, yet safe rule for removing packet linkability is to rotate all identifiers in unison.  Unfortunately, this strategy is problematic in practice.</p>
-<p id="rfc.section.2.p.3">XXX: describe why &#8212; involves cutting off connections, possibly. Need to align rotation events to minimize or limit linkability leakage: if identifier at layer (N) changes, then identifiers at layer (N - 1) and below should also change. (If TLS session ID changes for resumption, then all IP address, TCP port, Ethernet MAC address, etc. should also rotate)</p>
-<h1 id="rfc.section.3"><a href="#rfc.section.3">3.</a> <a href="#sticky-protocol-identifiers" id="sticky-protocol-identifiers">Sticky Protocol Identifiers</a></h1>
-<p id="rfc.section.3.p.1">In this section, we survey existing protocols developed inside and out of the IETF, and identify sticky protocol identifiers for each. A stick identifier is one that does not change across protocol &#8220;sessions,&#8221; regardless of whether it is transmitted in the clear or not. This may include state issued XXXy servers or, commonly, client algorithm, software configuration, or device-specific fields. We categorize surveyed protocols by OSI layer at which they operate. Specifically, we focus on Link, Internet, Transport, Session, and Application layers. (Our taxonomy may not match traditional OSI models, though we consider it sufficiently representative.)</p>
-<h1 id="rfc.section.3.1"><a href="#rfc.section.3.1">3.1.</a> <a href="#link-layer" id="link-layer">Link Layer</a></h1>
-<p id="rfc.section.3.1.p.1">XXX: address</p>
-<p id="rfc.section.3.1.p.2">Ethernet: MAC address XXX: include other link layer types from DHCP spec?</p>
-<h1 id="rfc.section.3.2"><a href="#rfc.section.3.2">3.2.</a> <a href="#internet-layer" id="internet-layer">Internet Layer</a></h1>
-<p/>
-
-<ul>
-  <li>IPv4 and IPv6: address</li>
-</ul>
-<h1 id="rfc.section.3.3"><a href="#rfc.section.3.3">3.3.</a> <a href="#transport-layer" id="transport-layer">Transport Layer</a></h1>
-<p/>
-
-<ul>
-  <li>TCP: port</li>
-  <li>MPTCP: multihome</li>
-  <li>SCTP: multihome (IP sending addresses in INIT chunks, this is not a mandatory parameter as per RFC4960), Initiate tag (used across multiple addresses), Address Families</li>
-  <li>RTP: application performance reporting</li>
-</ul>
-<h1 id="rfc.section.3.4"><a href="#rfc.section.3.4">3.4.</a> <a href="#session-layer" id="session-layer">Session Layer</a></h1>
-<p/>
-
-<ul>
-  <li>TLS: session IDs, and possibly algorithms (though the space of possible values is large here), DTLS 1.3 connection IDs</li>
-  <li>QUIC: connection ID</li>
-</ul>
-<h1 id="rfc.section.3.5"><a href="#rfc.section.3.5">3.5.</a> <a href="#application-layer" id="application-layer">Application Layer:</a></h1>
-<p/>
-
-<ul>
-  <li>HTTP: cookies</li>
-  <li>DNS: SRV hostnames</li>
-  <li>DHCP: broadcast discover requests, hardware type, client hardware address, IP addresses (http://www.networksorcery.com/enp/protocol/dhcp.htm), transaction identifier</li>
-  <li>NTP: (mode 3 &#8212; client to server, https://tools.ietf.org/html/draft-ietf-ntp-data-minimization-01#section-3): Timestamps, poll field, precision field, all other fields (Stratum, Root Delay, Root Dispersion, Ref ID, Ref Timestamp, Origin Timestamp, Receive Timestamp)</li>
-  <li>IMAP: username/password login&#8230;</li>
-</ul>
-<p id="rfc.section.3.5.p.2">Others: IMAP, LDAP, IKE/ESP, SRTP, oath, SIP, SSH, SNMP, ICMP, ARP</p>
-<h1 id="rfc.section.4"><a href="#rfc.section.4">4.</a> <a href="#iana-considerations" id="iana-considerations">IANA Considerations</a></h1>
-<p id="rfc.section.4.p.1">This document has on request to IANA.</p>
-<h1 id="rfc.section.5"><a href="#rfc.section.5">5.</a> <a href="#security-considerations" id="security-considerations">Security Considerations</a></h1>
-<p id="rfc.section.5.p.1">TODO</p>
-<h1 id="rfc.section.6"><a href="#rfc.section.6">6.</a> <a href="#acknowledgments" id="acknowledgments">Acknowledgments</a></h1>
-<p id="rfc.section.6.p.1">TODO</p>
-<h1 id="rfc.references"><a href="#rfc.references">7.</a> Normative References</h1>
-<table>
-  <tbody>
-    <tr>
-      <td class="reference">
-        <b id="I-D.ietf-dnssd-privacy">[I-D.ietf-dnssd-privacy]</b>
-      </td>
-      <td class="top"><a>Huitema, C.</a> and <a>D. Kaiser</a>, <a href="http://tools.ietf.org/html/draft-ietf-dnssd-privacy-03">Privacy Extensions for DNS-SD</a>", Internet-Draft draft-ietf-dnssd-privacy-03, September 2017.</td>
-    </tr>
-    <tr><td class="reference"><b id="Noise">[Noise]</b></td><td class="top"><a>The Noise Protocol Framework</a>", n.d..</td>, "</tr>
-    <tr>
-      <td class="reference">
-        <b id="RFC2508">[RFC2508]</b>
-      </td>
-      <td class="top"><a>Casner, S.</a> and <a>V. Jacobson</a>, "<a href="http://tools.ietf.org/html/rfc2508">Compressing IP/UDP/RTP Headers for Low-Speed Serial Links</a>", RFC 2508, DOI 10.17487/RFC2508, February 1999.</td>
-    </tr>
-    <tr>
-      <td class="reference">
-        <b id="RFC6973">[RFC6973]</b>
-      </td>
-      <td class="top"><a>Cooper, A.</a>, <a>Tschofenig, H.</a>, <a>Aboba, B.</a>, <a>Peterson, J.</a>, <a>Morris, J.</a>, <a>Hansen, M.</a> and <a>R. Smith</a>, "<a href="http://tools.ietf.org/html/rfc6973">Privacy Considerations for Internet Protocols</a>", RFC 6973, DOI 10.17487/RFC6973, July 2013.</td>
-    </tr>
-  </tbody>
-</table>
-<h1 id="rfc.authors">
-  <a href="#rfc.authors">Author's Address</a>
+<p id="rfc.section.4.p.2">Despite rotating all protocol identifiers beneath TLS, a static session identifier makes packet linkability trivial. Thus, a strict, yet safe rule for removing packet linkability is to rotate all identifiers in unison. Unfortunately, this strategy is problematic in practice. It would imply terminating active connections whenever an identifier changes (otherwise, linkability remains trivial).  If MAC addresses are rotated on a regular basis, e.g., every 15 minutes, then connection lifetimes are bounded by this window.</p>
+<p id="rfc.section.4.p.3">Moreover, there are multiple dimensions along which identifiers may be linked: in time, as identifiers are used and re-used by senders, and space, as identifiers are duplicated across multiple disjoint network paths. We refer to these dimensions as time and path linkability, respectively.</p>
+<p id="rfc.section.4.p.4">Time linkability is arguably simpler to mitigate, since new connections over time may opt to use new identifiers. For example, instead of resuming a TLS session with an existing session ID, a client may initiate a fresh handshake. In contrast, path linkability is more difficult to achieve, as it requires</p>
+<p id="rfc.section.4.p.5">XXX: describe why &#8212; involves cutting off connections, possibly. Need to align rotation events to minimize or limit linkability leakage: if identifier at layer (N) changes, then identifiers at layer (N - 1) and below should also change. (If TLS session ID changes for resumption, then all IP address, TCP port, Ethernet MAC address, etc. should also rotate)</p>
+<p id="rfc.section.4.p.6">XXX: discuss difference in linkability across time and space (multiple paths). time is easier to enforce. space is harder to accomplish.</p>
+<h1 id="rfc.section.5">
+<a href="#rfc.section.5">5.</a> <a href="#timing-considerations" id="timing-considerations">Timing Considerations</a>
 </h1>
+<p id="rfc.section.5.p.1">Advice in this document SHOULD NOT be interpreted as guarantees for preventing linkability. Rather, they aim to increase linkability complexity. It is difficult to prevent path-linkability without modifying protocols above the layer at which identifiers rotate. For example, assuming MPTCP subflows were unlinkable across paths, shared transport state controlling the rate of data transmission may be sufficient to link these flows.</p>
+<h1 id="rfc.section.6">
+<a href="#rfc.section.6">6.</a> <a href="#iana-considerations" id="iana-considerations">IANA Considerations</a>
+</h1>
+<p id="rfc.section.6.p.1">This document has no request to IANA.</p>
+<h1 id="rfc.section.7">
+<a href="#rfc.section.7">7.</a> <a href="#security-considerations" id="security-considerations">Security Considerations</a>
+</h1>
+<p id="rfc.section.7.p.1">TODO</p>
+<h1 id="rfc.section.8">
+<a href="#rfc.section.8">8.</a> <a href="#privacy-considerations" id="privacy-considerations">Privacy Considerations</a>
+</h1>
+<p id="rfc.section.8.p.1">TODO</p>
+<h1 id="rfc.section.9">
+<a href="#rfc.section.9">9.</a> <a href="#acknowledgments" id="acknowledgments">Acknowledgments</a>
+</h1>
+<p id="rfc.section.9.p.1">TODO</p>
+<h1 id="rfc.references">
+<a href="#rfc.references">10.</a> Normative References</h1>
+<table><tbody>
+<tr>
+<td class="reference"><b id="I-D.ietf-dnssd-privacy">[I-D.ietf-dnssd-privacy]</b></td>
+<td class="top">
+<a>Huitema, C.</a> and <a>D. Kaiser</a>, "<a href="https://tools.ietf.org/html/draft-ietf-dnssd-privacy-03">Privacy Extensions for DNS-SD</a>", Internet-Draft draft-ietf-dnssd-privacy-03, September 2017.</td>
+</tr>
+<tr>
+<td class="reference"><b id="Noise">[Noise]</b></td>
+<td class="top">"<a>The Noise Protocol Framework</a>", n.d..</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC0793">[RFC0793]</b></td>
+<td class="top">
+<a>Postel, J.</a>, "<a href="https://tools.ietf.org/html/rfc793">Transmission Control Protocol</a>", STD 7, RFC 793, DOI 10.17487/RFC0793, September 1981.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC2508">[RFC2508]</b></td>
+<td class="top">
+<a>Casner, S.</a> and <a>V. Jacobson</a>, "<a href="https://tools.ietf.org/html/rfc2508">Compressing IP/UDP/RTP Headers for Low-Speed Serial Links</a>", RFC 2508, DOI 10.17487/RFC2508, February 1999.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC6824">[RFC6824]</b></td>
+<td class="top">
+<a>Ford, A.</a>, <a>Raiciu, C.</a>, <a>Handley, M.</a> and <a>O. Bonaventure</a>, "<a href="https://tools.ietf.org/html/rfc6824">TCP Extensions for Multipath Operation with Multiple Addresses</a>", RFC 6824, DOI 10.17487/RFC6824, January 2013.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC6973">[RFC6973]</b></td>
+<td class="top">
+<a>Cooper, A.</a>, <a>Tschofenig, H.</a>, <a>Aboba, B.</a>, <a>Peterson, J.</a>, <a>Morris, J.</a>, <a>Hansen, M.</a> and <a>R. Smith</a>, "<a href="https://tools.ietf.org/html/rfc6973">Privacy Considerations for Internet Protocols</a>", RFC 6973, DOI 10.17487/RFC6973, July 2013.</td>
+</tr>
+</tbody></table>
+<h1 id="rfc.authors"><a href="#rfc.authors">Author's Address</a></h1>
 <div class="avoidbreak">
   <address class="vcard">
 	<span class="vcardline">
