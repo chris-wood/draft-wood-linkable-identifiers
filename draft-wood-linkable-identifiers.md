@@ -193,17 +193,15 @@ network paths. We refer to these dimensions as time and path linkability, respec
 
 Time linkability is arguably simpler to mitigate, since new connections over time may opt to use
 new identifiers. For example, instead of resuming a TLS session with an existing session ID, a
-client may initiate a fresh handshake. In contrast, path linkability is more difficult to achieve, 
-as it requires 
+client may initiate a fresh handshake. As a simple rule, if an identifier at layer (N) changes, 
+endpoints SHOULD use fresh identifiers for all lower layers, i.e., 1,.., (N-1). This means that
+new TLS sessions SHOULD be initiated from an endpoint with a fresh MAC address, IP addres, and
+TCP source port. 
 
-
-XXX: describe why — involves cutting off connections, possibly. Need to align rotation events to 
-minimize or limit linkability leakage: if identifier at layer (N) changes, then identifiers at 
-layer (N - 1) and below should also change. (If TLS session ID changes for resumption, then all IP 
-address, TCP port, Ethernet MAC address, etc. should also rotate)
-
-XXX: discuss difference in linkability across time and space (multiple paths). time is easier to 
-enforce. space is harder to accomplish.
+In contrast, path linkability is more difficult to achieve, as it requires using fresh identifiers 
+for each protocol field. (This may not always be technically feasible.) Moreover, protocols such
+as QUIC explicitly try to enable path linkability via connection-level identifiers (CIDs) to support 
+multihoming endpoints. This makes path linkability impossible to mitigate.
 
 # Timing Considerations
 
