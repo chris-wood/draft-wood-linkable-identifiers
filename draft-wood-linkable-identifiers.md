@@ -26,6 +26,7 @@ normative:
     RFC2508:
     RFC6824:
     RFC6973:
+    RFC7413:
     I-D.ietf-dnssd-privacy:
     Noise:
       title: The Noise Protocol Framework
@@ -118,8 +119,9 @@ connection. Per IANA allocations, ephemeral ports range from 49152 to 65535 (2^1
 [http://www.iana.org/assignments/port-numbers]. However, this does not prevent an application
 from re-using port across connections. Destination are also intentionally sticky, since they
 identify services offered by endpoints. Therefore, reusing a destination port does not lead to 
-decreased
-linkability.
+decreased linkability. Moreover, with TCP Fast Open (TFO) {{RFC7413}}, servers give clients
+plaintext cookies that must be re-used when resuming a TCP+TFO connection. Clients do not modify
+these server cookies, which therefore means they can be tracked.
 
 - MPTCP {{RFC6824}}: Connection tokens or IDs are explicitly used to link MPTCP subflows between IP
 address pairs. These tokens are only exposed during flow management operations, e.g., when creating
@@ -137,6 +139,7 @@ RFC4960), Initiate tag (used across multiple addresses), Address Families
 
 - TLS: session IDs, and possibly algorithms (though the space of possible values is large here), 
 DTLS 1.3 connection IDs
+- DTLS: Cookies
 - QUIC: connection ID
 
 ## Application Layer:
