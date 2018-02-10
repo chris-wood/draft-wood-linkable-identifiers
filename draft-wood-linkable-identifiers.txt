@@ -4,8 +4,8 @@
 
 Network Working Group                                            C. Wood
 Internet-Draft                                                Apple Inc.
-Intended status: Informational                         February 01, 2018
-Expires: August 5, 2018
+Intended status: Informational                         February 09, 2018
+Expires: August 13, 2018
 
 
                           Linkable Identifiers
@@ -23,14 +23,14 @@ Status of This Memo
    Internet-Drafts are working documents of the Internet Engineering
    Task Force (IETF).  Note that other groups may also distribute
    working documents as Internet-Drafts.  The list of current Internet-
-   Drafts is at https://datatracker.ietf.org/drafts/current/.
+   Drafts is at http://datatracker.ietf.org/drafts/current/.
 
    Internet-Drafts are draft documents valid for a maximum of six months
    and may be updated, replaced, or obsoleted by other documents at any
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on August 5, 2018.
+   This Internet-Draft will expire on August 13, 2018.
 
 Copyright Notice
 
@@ -39,7 +39,7 @@ Copyright Notice
 
    This document is subject to BCP 78 and the IETF Trust's Legal
    Provisions Relating to IETF Documents
-   (https://trustee.ietf.org/license-info) in effect on the date of
+   (http://trustee.ietf.org/license-info) in effect on the date of
    publication of this document.  Please review these documents
    carefully, as they describe your rights and restrictions with respect
    to this document.  Code Components extracted from this document must
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Wood                     Expires August 5, 2018                 [Page 1]
+Wood                     Expires August 13, 2018                [Page 1]
 
 Internet-Draft            linkable-identifiers             February 2018
 
@@ -63,19 +63,18 @@ Table of Contents
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
    2.  Identifier Scope and Threat Model . . . . . . . . . . . . . .   3
    3.  Sticky Protocol Identifiers . . . . . . . . . . . . . . . . .   3
-     3.1.  Link Layer  . . . . . . . . . . . . . . . . . . . . . . .   4
-     3.2.  Internet Layer  . . . . . . . . . . . . . . . . . . . . .   4
-     3.3.  Transport Layer . . . . . . . . . . . . . . . . . . . . .   4
-     3.4.  Session Layer . . . . . . . . . . . . . . . . . . . . . .   4
-     3.5.  Application Layer:  . . . . . . . . . . . . . . . . . . .   5
+     3.1.  Internet and Link Layer . . . . . . . . . . . . . . . . .   4
+     3.2.  Transport Layer . . . . . . . . . . . . . . . . . . . . .   4
+     3.3.  Session Layer . . . . . . . . . . . . . . . . . . . . . .   4
+     3.4.  Application Layer:  . . . . . . . . . . . . . . . . . . .   5
    4.  Limiting Linkable Identifiers . . . . . . . . . . . . . . . .   5
-   5.  Timing Considerations . . . . . . . . . . . . . . . . . . . .   6
-   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   6
-   7.  Security Considerations . . . . . . . . . . . . . . . . . . .   6
+   5.  Timing Considerations . . . . . . . . . . . . . . . . . . . .   7
+   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   7
+   7.  Security Considerations . . . . . . . . . . . . . . . . . . .   7
    8.  Privacy Considerations  . . . . . . . . . . . . . . . . . . .   7
    9.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .   7
    10. Normative References  . . . . . . . . . . . . . . . . . . . .   7
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   7
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   8
 
 1.  Introduction
 
@@ -109,7 +108,8 @@ Table of Contents
 
 
 
-Wood                     Expires August 5, 2018                 [Page 2]
+
+Wood                     Expires August 13, 2018                [Page 2]
 
 Internet-Draft            linkable-identifiers             February 2018
 
@@ -165,23 +165,20 @@ Internet-Draft            linkable-identifiers             February 2018
 
 
 
-Wood                     Expires August 5, 2018                 [Page 3]
+Wood                     Expires August 13, 2018                [Page 3]
 
 Internet-Draft            linkable-identifiers             February 2018
 
 
-3.1.  Link Layer
+3.1.  Internet and Link Layer
 
-   XXX: address
+   o  IPv4 and IPv6: Static or infrequently rotating addresses are
+      sticky identifiers when exposed on the network.
 
-   Ethernet: MAC address XXX: include other link layer types from DHCP
-   spec?
+   o  Ethernet: MAC addresses are fixed to specific devices.  Unless
+      frequently rotated, they are sticky identifiers.
 
-3.2.  Internet Layer
-
-   o  IPv4 and IPv6: address
-
-3.3.  Transport Layer
+3.2.  Transport Layer
 
    o  TCP [RFC0793]: TCP source ports may be sticky if reused across
       senders.  For example, most operating systems allocate allocate
@@ -192,6 +189,10 @@ Internet-Draft            linkable-identifiers             February 2018
       across connections.  Destination are also intentionally sticky,
       since they identify services offered by endpoints.  Therefore,
       reusing a destination port does not lead to decreased linkability.
+      Moreover, with TCP Fast Open (TFO) [RFC7413], servers give clients
+      plaintext cookies that must be re-used when resuming a TCP+TFO
+      connection.  Clients do not modify these server cookies, which
+      therefore means they can be tracked.
 
    o  MPTCP [RFC6824]: Connection tokens or IDs are explicitly used to
       link MPTCP subflows between IP address pairs.  These tokens are
@@ -202,31 +203,47 @@ Internet-Draft            linkable-identifiers             February 2018
       out-of-order subflow packet arrival.  The union of packet DSNs
       across subflows should yield a contiguous packet number sequence.
 
-   o  SCTP: multihome (IP sending addresses in INIT chunks, this is not
-      a mandatory parameter as per RFC4960), Initiate tag (used across
-      multiple addresses), Address Families
+3.3.  Session Layer
 
-   o  RTP: application performance reporting
+   o  TLS: Prior to TLS 1.3 ((CITE)), significant information is exposed
+      during TLS handshakes, including: session identifiers (or re-used
+      PSK identifiers in TLS 1.3), timestamps, random nonces, supported
+      ciphersuites, certificates, and extensions.  Many of these are
+      common across all TLS clients - specifically, ciphersuites,
+      nonces, and timestamps.  However, others may persist across active
+      sessions, including: session identifiers (in TLS 1.2 and earlier
+      versions) and re-used PSK identifiers (in TLS 1.3).  Without
+      rotation, these re-used identifers are sticky.
 
-3.4.  Session Layer
-
-   o  TLS: session IDs, and possibly algorithms (though the space of
-      possible values is large here), DTLS 1.3 connection IDs
-
-   o  QUIC: connection ID
-
-
-
-
-
+   o  DTLS: Datagram TLS ((CITE)) is a slightly modified variant of TLS
+      aimed to run over datagram protocols such as UDP.  In addition to
+      identifiers exposed via TLS, DTLS adds cookie-based denial-of-
 
 
-Wood                     Expires August 5, 2018                 [Page 4]
+
+Wood                     Expires August 13, 2018                [Page 4]
 
 Internet-Draft            linkable-identifiers             February 2018
 
 
-3.5.  Application Layer:
+      service countermeasures.  Servers issue stateless cookies to
+      clients during a handshake, which must be replayed in cleartext by
+      clients to prove ownership of its IP address.  (This is similar to
+      TFO cookies described above.)  Additionally, DTLS 1.3 ((CITE)) is
+      considering support of a static connection identifier (CID), which
+      permits client address mobility.  CIDs are specifically designed
+      to not change across addresses.
+
+   o  QUIC: QUIC ((CITE)) is another secure transport protocol
+      originally developed by Google and now being standardized by the
+      IETF.  IETF-QUIC ((CITE)) uses TLS 1.3 for its handshake.  In
+      addition to identifiers exposed by TLS 1.3, QUIC has its own
+      connection identifier (CID) used to permit address mobility.
+
+3.4.  Application Layer:
+
+   XXX: this section is 100% incomplete XXX: Georgios, you can probably
+   start here if you're looking for some things to stab at
 
    o  HTTP ((CITE)): Cookies are sticky identifiers created chosen by
       servers to carry application state across requests.  Cookies might
@@ -245,10 +262,6 @@ Internet-Draft            linkable-identifiers             February 2018
       Root Dispersion, Ref ID, Ref Timestamp, Origin Timestamp, Receive
       Timestamp)
 
-   o  IMAP: username/password login...
-
-   Others: IMAP, LDAP, IKE/ESP, SRTP, oath, SIP, SSH, SNMP, ICMP, ARP
-
 4.  Limiting Linkable Identifiers
 
    The introductory example illustrating packet linkability using MAC
@@ -256,6 +269,18 @@ Internet-Draft            linkable-identifiers             February 2018
    packets.  As another hypothetical example, assume that IP address and
    MAC addresses were properly rotated.  Moreover, assume TLS session
    IDs were reused over time, as shown below.
+
+
+
+
+
+
+
+
+Wood                     Expires August 13, 2018                [Page 5]
+
+Internet-Draft            linkable-identifiers             February 2018
+
 
    +---------------+        +---------------+
    |TLS SessionID X<-------->TLS SessionID X|
@@ -274,14 +299,6 @@ Internet-Draft            linkable-identifiers             February 2018
    session identifier makes packet linkability trivial.  Thus, a strict,
    yet safe rule for removing packet linkability is to rotate all
    identifiers in unison.  Unfortunately, this strategy is problematic
-
-
-
-Wood                     Expires August 5, 2018                 [Page 5]
-
-Internet-Draft            linkable-identifiers             February 2018
-
-
    in practice.  It would imply terminating active connections whenever
    an identifier changes (otherwise, linkability remains trivial).  If
    MAC addresses are rotated on a regular basis, e.g., every 15 minutes,
@@ -300,14 +317,26 @@ Internet-Draft            linkable-identifiers             February 2018
    identifier at layer (N) changes, endpoints SHOULD use fresh
    identifiers for all lower layers, i.e., 1,.., (N-1).  This means that
    new TLS sessions SHOULD be initiated from an endpoint with a fresh
-   MAC address, IP addres, and TCP source port.
+   MAC address, IP address, and TCP source port.
 
    In contrast, path linkability is more difficult to achieve, as it
    requires using fresh identifiers for each protocol field.  (This may
    not always be technically feasible.)  Moreover, protocols such as
    QUIC explicitly try to enable path linkability via connection-level
    identifiers (CIDs) to support multihoming endpoints.  This makes path
-   linkability impossible to mitigate.
+   linkability impossible to mitigate.  However, as multiple, disjoint
+   paths may be operated by different entities, it may be the case that
+   collusion is less common.
+
+
+
+
+
+
+Wood                     Expires August 13, 2018                [Page 6]
+
+Internet-Draft            linkable-identifiers             February 2018
+
 
 5.  Timing Considerations
 
@@ -326,17 +355,6 @@ Internet-Draft            linkable-identifiers             February 2018
 7.  Security Considerations
 
    TODO
-
-
-
-
-
-
-
-Wood                     Expires August 5, 2018                 [Page 6]
-
-Internet-Draft            linkable-identifiers             February 2018
-
 
 8.  Privacy Considerations
 
@@ -361,19 +379,30 @@ Internet-Draft            linkable-identifiers             February 2018
 
    [RFC2508]  Casner, S. and V. Jacobson, "Compressing IP/UDP/RTP
               Headers for Low-Speed Serial Links", RFC 2508,
-              DOI 10.17487/RFC2508, February 1999,
-              <https://www.rfc-editor.org/info/rfc2508>.
+              DOI 10.17487/RFC2508, February 1999, <https://www.rfc-
+              editor.org/info/rfc2508>.
 
    [RFC6824]  Ford, A., Raiciu, C., Handley, M., and O. Bonaventure,
               "TCP Extensions for Multipath Operation with Multiple
               Addresses", RFC 6824, DOI 10.17487/RFC6824, January 2013,
               <https://www.rfc-editor.org/info/rfc6824>.
 
+
+
+Wood                     Expires August 13, 2018                [Page 7]
+
+Internet-Draft            linkable-identifiers             February 2018
+
+
    [RFC6973]  Cooper, A., Tschofenig, H., Aboba, B., Peterson, J.,
               Morris, J., Hansen, M., and R. Smith, "Privacy
               Considerations for Internet Protocols", RFC 6973,
-              DOI 10.17487/RFC6973, July 2013,
-              <https://www.rfc-editor.org/info/rfc6973>.
+              DOI 10.17487/RFC6973, July 2013, <https://www.rfc-
+              editor.org/info/rfc6973>.
+
+   [RFC7413]  Cheng, Y., Chu, J., Radhakrishnan, S., and A. Jain, "TCP
+              Fast Open", RFC 7413, DOI 10.17487/RFC7413, December 2014,
+              <https://www.rfc-editor.org/info/rfc7413>.
 
 Author's Address
 
@@ -389,4 +418,31 @@ Author's Address
 
 
 
-Wood                     Expires August 5, 2018                 [Page 7]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Wood                     Expires August 13, 2018                [Page 8]

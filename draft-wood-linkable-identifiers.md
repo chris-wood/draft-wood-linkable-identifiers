@@ -100,16 +100,13 @@ device-specific fields. We categorize surveyed protocols by OSI layer at which t
 Specifically, we focus on Link, Internet, Transport, Session, and Application layers. (Our taxonomy 
 may not match traditional OSI models, though we consider it sufficiently representative.)
 
-## Link Layer
+## Internet and Link Layer
 
-XXX: address
+- IPv4 and IPv6: Static or infrequently rotating addresses are sticky identifiers
+when exposed on the network.  
 
-Ethernet: MAC address
-XXX: include other link layer types from DHCP spec?
-
-## Internet Layer
-
-- IPv4 and IPv6: address
+- Ethernet: MAC addresses are fixed to specific devices. Unless frequently rotated,
+they are sticky identifiers.
 
 ## Transport Layer
 
@@ -130,36 +127,48 @@ an additional data sequence number (DSN) TCP option to allow receivers to deal w
 subflow packet arrival. The union of packet DSNs across subflows should yield a contiguous packet
 number sequence. 
 
-- SCTP: multihome (IP sending addresses in INIT chunks, this is not a mandatory parameter as per 
-RFC4960), Initiate tag (used across multiple addresses), Address Families
-
-- RTP: application performance reporting
+<!-- - SCTP: multihome (IP sending addresses in INIT chunks, this is not a mandatory parameter as per  -->
+<!-- RFC4960), Initiate tag (used across multiple addresses), Address Families -->
+<!-- - RTP: application performance reporting -->
 
 ## Session Layer
 
-- TLS: session IDs, and possibly algorithms (though the space of possible values is large here), 
-DTLS 1.3 connection IDs
-- DTLS: Cookies
-- QUIC: connection ID
+- TLS: Prior to TLS 1.3 ((CITE)), significant information is exposed during TLS handshakes, including:
+session identifiers (or re-used PSK identifiers in TLS 1.3), timestamps, random nonces, supported ciphersuites, 
+certificates, and extensions. Many of these are common across all TLS clients -- specifically, ciphersuites, 
+nonces, and timestamps. However, others may persist across active sessions, including: session identifiers (in TLS 1.2 
+and earlier versions) and re-used PSK identifiers (in TLS 1.3). Without rotation, these re-used identifers
+are sticky.
+
+- DTLS: Datagram TLS ((CITE)) is a slightly modified variant of TLS aimed to run over datagram protocols
+such as UDP. In addition to identifiers exposed via TLS, DTLS adds cookie-based denial-of-service
+countermeasures. Servers issue stateless cookies to clients during a handshake, which must be replayed
+in cleartext by clients to prove ownership of its IP address. (This is similar to TFO cookies described
+above.) Additionally, DTLS 1.3 ((CITE)) is considering support of a static connection identifier (CID), which permits 
+client address mobility. CIDs are specifically designed to not change across addresses.
+
+- QUIC: QUIC ((CITE)) is another secure transport protocol originally developed by Google and now being
+standardized by the IETF. IETF-QUIC ((CITE)) uses TLS 1.3 for its handshake. In addition to identifiers
+exposed by TLS 1.3, QUIC has its own connection identifier (CID) used to permit address mobility.
 
 ## Application Layer:
 
-- HTTP ((CITE)): Cookies are sticky identifiers created chosen by servers to carry application 
-state across
-requests. Cookies might contain information about client identity or authentication preferences
+XXX: this section is 100% incomplete
+XXX: Georgios, you can probably start here if you're looking for some things to stab at
 
+- HTTP ((CITE)): Cookies are sticky identifiers created chosen by servers to carry application 
+state across requests. Cookies might contain information about client identity or 
+authentication preferences
 - DNS: SRV hostnames
 - DHCP: broadcast discover requests, hardware type, client hardware address, IP addresses 
 (http://www.networksorcery.com/enp/protocol/dhcp.htm), transaction identifier
-
 - NTP: (mode 3 — client to server, 
 https://tools.ietf.org/html/draft-ietf-ntp-data-minimization-01#section-3): Timestamps, poll field, 
 precision field, all other fields (Stratum, Root Delay, Root Dispersion, Ref ID, Ref Timestamp, 
 Origin Timestamp, Receive Timestamp) 
 
-- IMAP: username/password login...
-
-Others: IMAP, LDAP, IKE/ESP, SRTP, oath, SIP, SSH, SNMP, ICMP, ARP
+<!-- - IMAP: username/password login? -->
+<!-- Others to consider? IMAP, LDAP, IKE/ESP, SRTP, oath, SIP, SSH, SNMP, ICMP, ARP -->
 
 # Limiting Linkable Identifiers
 
@@ -198,7 +207,7 @@ Time linkability is arguably simpler to mitigate, since new connections over tim
 new identifiers. For example, instead of resuming a TLS session with an existing session ID, a
 client may initiate a fresh handshake. As a simple rule, if an identifier at layer (N) changes, 
 endpoints SHOULD use fresh identifiers for all lower layers, i.e., 1,.., (N-1). This means that
-new TLS sessions SHOULD be initiated from an endpoint with a fresh MAC address, IP addres, and
+new TLS sessions SHOULD be initiated from an endpoint with a fresh MAC address, IP address, and
 TCP source port. 
 
 In contrast, path linkability is more difficult to achieve, as it requires using fresh identifiers 
