@@ -107,13 +107,17 @@ E.g., one for TLS and another for HTTP.
 
 # Sticky Protocol Identifiers
 
-In this section, we survey existing protocols developed inside and out of the IETF, and identify
-sticky protocol identifiers for each. A stick identifier is one that does not change across
-protocol "sessions," regardless of whether it is transmitted in the clear or not. This may include
-state-generating servers or, commonly, client algorithm, software configuration, or
-device-specific fields. We categorize surveyed protocols by OSI layer at which they operate.
-Specifically, we focus on Link, Internet, Transport, Session, and Application layers. (Our taxonomy
-may not match traditional OSI models, though we consider it sufficiently representative.)
+In this section, we survey existing protocols developed inside and out of the
+IETF, and identify sticky protocol identifiers for each. A sticky identifier
+is one that persists across logically grouped data exchanges between a client
+and server.
+This may include state-generating servers or, commonly, client algorithm,
+software configuration, or device-specific fields.
+We categorize surveyed protocols by the OSI layer at which they operate.
+Specifically, we focus on Link, Internet, Transport, Session, and Application
+layers.
+(Our taxonomy may not match traditional OSI models, though we consider it
+sufficiently representative.)
 
 ## Internet and Link Layer
 

@@ -409,7 +409,7 @@ address {
 <h1 id="rfc.section.2">
 <a href="#rfc.section.2">2.</a> <a href="#identifier-scope-and-threat-model" id="identifier-scope-and-threat-model">Identifier Scope and Threat Model</a>
 </h1>
-<p id="rfc.section.2.p.1">Not all packet or datagram identifiers are visible end-to-end. For example, MAC addresses are only visible on local subnets. IP addresses are only visible between endpoints. (In systems such as Tor, source and destination addresses change at each circuit hop.) Thus, threats to identifier linkability depend on the threat model under consideration. Off-path adversaries are generally not a problem since they do not have access to datagrams in flight. On-path adversaries may exist at various locations relative to an endpoint (sender or receiver) on a path, e.g., in a local subnet, as an intermediate router or middlebox between two endpoints, or as a TLS terminating reverse proxy. In this document, we categorize these three types of adversaries as follows:</p>
+<p id="rfc.section.2.p.1">Not all packet or datagram identifiers are visible end-to-end in a client-server interaction. For example, MAC addresses are only visible within on local subnets.  IP addresses are only visible between endpoints. (In systems such as Tor, source and destination addresses change at each circuit hop.) Thus, threats to identifier linkability depend on the threat model under consideration. Off-path adversaries are generally not a problem since they do not have access to datagrams in flight. On-path adversaries may exist at various locations relative to an endpoint (sender or receiver) on a path, e.g., in a local subnet, as an intermediate router or middlebox between two endpoints, or as a TLS terminating reverse proxy. In this document, we categorize these three types of adversaries as follows:</p>
 <p></p>
 
 <ol>
@@ -420,7 +420,7 @@ address {
 <h1 id="rfc.section.3">
 <a href="#rfc.section.3">3.</a> <a href="#sticky-protocol-identifiers" id="sticky-protocol-identifiers">Sticky Protocol Identifiers</a>
 </h1>
-<p id="rfc.section.3.p.1">In this section, we survey existing protocols developed inside and out of the IETF, and identify sticky protocol identifiers for each. A stick identifier is one that does not change across protocol &#8220;sessions,&#8221; regardless of whether it is transmitted in the clear or not. This may include state-generating servers or, commonly, client algorithm, software configuration, or device-specific fields. We categorize surveyed protocols by OSI layer at which they operate.  Specifically, we focus on Link, Internet, Transport, Session, and Application layers. (Our taxonomy may not match traditional OSI models, though we consider it sufficiently representative.)</p>
+<p id="rfc.section.3.p.1">In this section, we survey existing protocols developed inside and out of the IETF, and identify sticky protocol identifiers for each. A sticky identifier is one that persists across logically grouped data exchanges between a client and server.  This may include state-generating servers or, commonly, client algorithm, software configuration, or device-specific fields.  We categorize surveyed protocols by the OSI layer at which they operate.  Specifically, we focus on Link, Internet, Transport, Session, and Application layers.  (Our taxonomy may not match traditional OSI models, though we consider it sufficiently representative.)</p>
 <h1 id="rfc.section.3.1">
 <a href="#rfc.section.3.1">3.1.</a> <a href="#internet-and-link-layer" id="internet-and-link-layer">Internet and Link Layer</a>
 </h1>

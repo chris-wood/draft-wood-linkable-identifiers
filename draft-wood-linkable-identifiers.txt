@@ -138,18 +138,19 @@ Internet-Draft            linkable-identifiers             February 2018
 
 2.  Identifier Scope and Threat Model
 
-   Not all packet or datagram identifiers are visible end-to-end.  For
-   example, MAC addresses are only visible on local subnets.  IP
-   addresses are only visible between endpoints.  (In systems such as
-   Tor, source and destination addresses change at each circuit hop.)
-   Thus, threats to identifier linkability depend on the threat model
-   under consideration.  Off-path adversaries are generally not a
-   problem since they do not have access to datagrams in flight.  On-
-   path adversaries may exist at various locations relative to an
-   endpoint (sender or receiver) on a path, e.g., in a local subnet, as
-   an intermediate router or middlebox between two endpoints, or as a
-   TLS terminating reverse proxy.  In this document, we categorize these
-   three types of adversaries as follows:
+   Not all packet or datagram identifiers are visible end-to-end in a
+   client-server interaction.  For example, MAC addresses are only
+   visible within on local subnets.  IP addresses are only visible
+   between endpoints.  (In systems such as Tor, source and destination
+   addresses change at each circuit hop.)  Thus, threats to identifier
+   linkability depend on the threat model under consideration.  Off-path
+   adversaries are generally not a problem since they do not have access
+   to datagrams in flight.  On-path adversaries may exist at various
+   locations relative to an endpoint (sender or receiver) on a path,
+   e.g., in a local subnet, as an intermediate router or middlebox
+   between two endpoints, or as a TLS terminating reverse proxy.  In
+   this document, we categorize these three types of adversaries as
+   follows:
 
    1.  Local: An on-path adversary belonging to the same local subnet as
        an endpoint, a switch.
@@ -160,8 +161,7 @@ Internet-Draft            linkable-identifiers             February 2018
 
    3.  Terminator: An on-path adversary that terminates a connection,
        e.g., a TLS-terminating reverse proxy.  Note that there can be
-       distinct terminators for individual layers of network stack.
-       E.g., one for TLS and another for HTTP.
+
 
 
 
@@ -170,18 +170,21 @@ Wood                     Expires August 16, 2018                [Page 3]
 Internet-Draft            linkable-identifiers             February 2018
 
 
+       distinct terminators for individual layers of network stack.
+       E.g., one for TLS and another for HTTP.
+
 3.  Sticky Protocol Identifiers
 
    In this section, we survey existing protocols developed inside and
    out of the IETF, and identify sticky protocol identifiers for each.
-   A stick identifier is one that does not change across protocol
-   "sessions," regardless of whether it is transmitted in the clear or
-   not.  This may include state-generating servers or, commonly, client
-   algorithm, software configuration, or device-specific fields.  We
-   categorize surveyed protocols by OSI layer at which they operate.
-   Specifically, we focus on Link, Internet, Transport, Session, and
-   Application layers.  (Our taxonomy may not match traditional OSI
-   models, though we consider it sufficiently representative.)
+   A sticky identifier is one that persists across logically grouped
+   data exchanges between a client and server.  This may include state-
+   generating servers or, commonly, client algorithm, software
+   configuration, or device-specific fields.  We categorize surveyed
+   protocols by the OSI layer at which they operate.  Specifically, we
+   focus on Link, Internet, Transport, Session, and Application layers.
+   (Our taxonomy may not match traditional OSI models, though we
+   consider it sufficiently representative.)
 
 3.1.  Internet and Link Layer
 
@@ -215,9 +218,6 @@ Internet-Draft            linkable-identifiers             February 2018
       sequence number (DSN) TCP option to allow receivers to deal with
       out-of-order subflow packet arrival.  The union of packet DSNs
       across subflows should yield a contiguous packet number sequence.
-
-
-
 
 
 
