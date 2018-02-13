@@ -159,9 +159,9 @@ Internet-Draft            linkable-identifiers             February 2018
        middlebox or performance enhancing proxy (PEP).
 
    3.  Terminator: An on-path adversary that terminates a connection,
-       e.g., a TLS-terminating reverse proxy.
-
-
+       e.g., a TLS-terminating reverse proxy.  Note that there can be
+       distinct terminators for individual layers of network stack.
+       E.g., one for TLS and another for HTTP.
 
 
 

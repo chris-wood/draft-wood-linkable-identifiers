@@ -88,8 +88,9 @@ practice on common systems.
 
 # Identifier Scope and Threat Model
 
-Not all packet or datagram identifiers are visible end-to-end. For example, MAC addresses are only
-visible on local subnets. IP addresses are only visible between endpoints. (In systems such as Tor,
+Not all packet or datagram identifiers are visible end-to-end in a client-server
+interaction. For example, MAC addresses are only visible within on local subnets.
+IP addresses are only visible between endpoints. (In systems such as Tor,
 source and destination addresses change at each circuit hop.) Thus, threats to identifier linkability
 depend on the threat model under consideration. Off-path adversaries are generally not a problem since
 they do not have access to datagrams in flight. On-path adversaries may exist at various locations
@@ -101,6 +102,8 @@ these three types of adversaries as follows:
 2. Intermediate: An on-path adversary that observes datagrams in flight but does not
 terminate a (TCP or TLS) connection, e.g., a middlebox or performance enhancing proxy (PEP).
 3. Terminator: An on-path adversary that terminates a connection, e.g., a TLS-terminating reverse proxy.
+Note that there can be distinct terminators for individual layers of network stack.
+E.g., one for TLS and another for HTTP.
 
 # Sticky Protocol Identifiers
 

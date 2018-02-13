@@ -415,7 +415,7 @@ address {
 <ol>
 <li>Local: An on-path adversary belonging to the same local subnet as an endpoint, a switch.</li>
 <li>Intermediate: An on-path adversary that observes datagrams in flight but does not terminate a (TCP or TLS) connection, e.g., a middlebox or performance enhancing proxy (PEP).</li>
-<li>Terminator: An on-path adversary that terminates a connection, e.g., a TLS-terminating reverse proxy.</li>
+<li>Terminator: An on-path adversary that terminates a connection, e.g., a TLS-terminating reverse proxy.  Note that there can be distinct terminators for individual layers of network stack.  E.g., one for TLS and another for HTTP.</li>
 </ol>
 <h1 id="rfc.section.3">
 <a href="#rfc.section.3">3.</a> <a href="#sticky-protocol-identifiers" id="sticky-protocol-identifiers">Sticky Protocol Identifiers</a>
