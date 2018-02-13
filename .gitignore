@@ -1,3 +1,4 @@
 .refcache/
 .targets.mk
 lib/
+.bak
