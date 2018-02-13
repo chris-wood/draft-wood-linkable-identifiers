@@ -176,7 +176,7 @@ exposed by TLS 1.3, QUIC has its own connection identifier (CID) used to permit 
 ## Application Layer:
 
 - HTTP {{RFC2616}}: While HTTP is a stateless protocol, it enables applications
-to define state-keeping mechanisms in header fields. The fields might carry
+to define state-keeping mechanisms in header fields. The fields might cary
 the state itself or tokens pointing to state kept at the endpoints.
 The Cookie header field {{RFC6265}} is de-facto the mechanism for web
 applications to uniquely identify their clients by generating a token

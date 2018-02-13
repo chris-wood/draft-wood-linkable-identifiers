@@ -452,11 +452,10 @@ address {
 <h1 id="rfc.section.3.4">
 <a href="#rfc.section.3.4">3.4.</a> <a href="#application-layer" id="application-layer">Application Layer:</a>
 </h1>
-<p id="rfc.section.3.4.p.1">XXX: this section is 100% incomplete XXX: Georgios, you can probably start here if you&#8217;re looking for some things to stab at</p>
 <p></p>
 
 <ul>
-<li>HTTP ((CITE)): Cookies are sticky identifiers created chosen by servers to carry application state across requests. Cookies might contain information about client identity or authentication preferences</li>
+<li>HTTP <a href="#RFC2616" class="xref">[RFC2616]</a>: While HTTP is a stateless protocol, it enables applications to define state-keeping mechanisms in header fields. The fields might carry the state itself or tokens pointing to state kept at the endpoints.  The Cookie header field <a href="#RFC6265" class="xref">[RFC6265]</a> is de-facto the mechanism for web applications to uniquely identify their clients by generating a token and instructing the client to attach to any future requests.  The ETag header field <a href="#RFC7232" class="xref">[RFC7232]</a> enables the application to uniquely reference a resource which the client may cache. The application may returning unique reference tokens to distinct clients.</li>
 <li>DNS: SRV hostnames</li>
 <li>DHCP: broadcast discover requests, hardware type, client hardware address, IP addresses (http://www.networksorcery.com/enp/protocol/dhcp.htm), transaction identifier</li>
 <li>NTP: (mode 3 &#8212; client to server, https://tools.ietf.org/html/draft-ietf-ntp-data-minimization-01#section-3): Timestamps, poll field, precision field, all other fields (Stratum, Root Delay, Root Dispersion, Ref ID, Ref Timestamp, Origin Timestamp, Receive Timestamp)</li>
@@ -526,6 +525,16 @@ address {
 <a>Casner, S.</a> and <a>V. Jacobson</a>, "<a href="https://tools.ietf.org/html/rfc2508">Compressing IP/UDP/RTP Headers for Low-Speed Serial Links</a>", RFC 2508, DOI 10.17487/RFC2508, February 1999.</td>
 </tr>
 <tr>
+<td class="reference"><b id="RFC2616">[RFC2616]</b></td>
+<td class="top">
+<a>Fielding, R.</a>, <a>Gettys, J.</a>, <a>Mogul, J.</a>, <a>Frystyk, H.</a>, <a>Masinter, L.</a>, <a>Leach, P.</a> and <a>T. Berners-Lee</a>, "<a href="https://tools.ietf.org/html/rfc2616">Hypertext Transfer Protocol -- HTTP/1.1</a>", RFC 2616, DOI 10.17487/RFC2616, June 1999.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC6265">[RFC6265]</b></td>
+<td class="top">
+<a>Barth, A.</a>, "<a href="https://tools.ietf.org/html/rfc6265">HTTP State Management Mechanism</a>", RFC 6265, DOI 10.17487/RFC6265, April 2011.</td>
+</tr>
+<tr>
 <td class="reference"><b id="RFC6824">[RFC6824]</b></td>
 <td class="top">
 <a>Ford, A.</a>, <a>Raiciu, C.</a>, <a>Handley, M.</a> and <a>O. Bonaventure</a>, "<a href="https://tools.ietf.org/html/rfc6824">TCP Extensions for Multipath Operation with Multiple Addresses</a>", RFC 6824, DOI 10.17487/RFC6824, January 2013.</td>
@@ -534,6 +543,11 @@ address {
 <td class="reference"><b id="RFC6973">[RFC6973]</b></td>
 <td class="top">
 <a>Cooper, A.</a>, <a>Tschofenig, H.</a>, <a>Aboba, B.</a>, <a>Peterson, J.</a>, <a>Morris, J.</a>, <a>Hansen, M.</a> and <a>R. Smith</a>, "<a href="https://tools.ietf.org/html/rfc6973">Privacy Considerations for Internet Protocols</a>", RFC 6973, DOI 10.17487/RFC6973, July 2013.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC7232">[RFC7232]</b></td>
+<td class="top">
+<a>Fielding, R.</a> and <a>J. Reschke</a>, "<a href="https://tools.ietf.org/html/rfc7232">Hypertext Transfer Protocol (HTTP/1.1): Conditional Requests</a>", RFC 7232, DOI 10.17487/RFC7232, June 2014.</td>
 </tr>
 <tr>
 <td class="reference"><b id="RFC7413">[RFC7413]</b></td>

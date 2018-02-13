@@ -257,13 +257,16 @@ Internet-Draft            linkable-identifiers             February 2018
 
 3.4.  Application Layer:
 
-   XXX: this section is 100% incomplete XXX: Georgios, you can probably
-   start here if you're looking for some things to stab at
-
-   o  HTTP ((CITE)): Cookies are sticky identifiers created chosen by
-      servers to carry application state across requests.  Cookies might
-      contain information about client identity or authentication
-      preferences
+   o  HTTP [RFC2616]: While HTTP is a stateless protocol, it enables
+      applications to define state-keeping mechanisms in header fields.
+      The fields might carry the state itself or tokens pointing to
+      state kept at the endpoints.  The Cookie header field [RFC6265] is
+      de-facto the mechanism for web applications to uniquely identify
+      their clients by generating a token and instructing the client to
+      attach to any future requests.  The ETag header field [RFC7232]
+      enables the application to uniquely reference a resource which the
+      client may cache.  The application may returning unique reference
+      tokens to distinct clients.
 
    o  DNS: SRV hostnames
 
@@ -271,9 +274,6 @@ Internet-Draft            linkable-identifiers             February 2018
       address, IP addresses (http://www.networksorcery.com/enp/protocol/
       dhcp.htm), transaction identifier
 
-   o  NTP: (mode 3 -- client to server, https://tools.ietf.org/html/
-      draft-ietf-ntp-data-minimization-01#section-3): Timestamps, poll
-      field, precision field, all other fields (Stratum, Root Delay,
 
 
 
@@ -282,6 +282,9 @@ Wood                     Expires August 16, 2018                [Page 5]
 Internet-Draft            linkable-identifiers             February 2018
 
 
+   o  NTP: (mode 3 -- client to server, https://tools.ietf.org/html/
+      draft-ietf-ntp-data-minimization-01#section-3): Timestamps, poll
+      field, precision field, all other fields (Stratum, Root Delay,
       Root Dispersion, Ref ID, Ref Timestamp, Origin Timestamp, Receive
       Timestamp)
 
@@ -327,9 +330,6 @@ Internet-Draft            linkable-identifiers             February 2018
    client may initiate a fresh handshake.  As a simple rule, if an
    identifier at layer (N) changes, endpoints SHOULD use fresh
    identifiers for all lower layers, i.e., 1,.., (N-1).  This means that
-   new TLS sessions SHOULD be initiated from an endpoint with a fresh
-   MAC address, IP address, and TCP source port.
-
 
 
 
@@ -337,6 +337,9 @@ Wood                     Expires August 16, 2018                [Page 6]
 
 Internet-Draft            linkable-identifiers             February 2018
 
+
+   new TLS sessions SHOULD be initiated from an endpoint with a fresh
+   MAC address, IP address, and TCP source port.
 
    In contrast, path linkability is more difficult to achieve, as it
    requires using fresh identifiers for each protocol field.  (This may
@@ -382,9 +385,6 @@ Internet-Draft            linkable-identifiers             February 2018
 
    [Noise]    "The Noise Protocol Framework", n.d..
 
-   [RFC0793]  Postel, J., "Transmission Control Protocol", STD 7,
-              RFC 793, DOI 10.17487/RFC0793, September 1981,
-              <https://www.rfc-editor.org/info/rfc793>.
 
 
 
@@ -394,10 +394,24 @@ Wood                     Expires August 16, 2018                [Page 7]
 Internet-Draft            linkable-identifiers             February 2018
 
 
+   [RFC0793]  Postel, J., "Transmission Control Protocol", STD 7,
+              RFC 793, DOI 10.17487/RFC0793, September 1981,
+              <https://www.rfc-editor.org/info/rfc793>.
+
    [RFC2508]  Casner, S. and V. Jacobson, "Compressing IP/UDP/RTP
               Headers for Low-Speed Serial Links", RFC 2508,
               DOI 10.17487/RFC2508, February 1999,
               <https://www.rfc-editor.org/info/rfc2508>.
+
+   [RFC2616]  Fielding, R., Gettys, J., Mogul, J., Frystyk, H.,
+              Masinter, L., Leach, P., and T. Berners-Lee, "Hypertext
+              Transfer Protocol -- HTTP/1.1", RFC 2616,
+              DOI 10.17487/RFC2616, June 1999,
+              <https://www.rfc-editor.org/info/rfc2616>.
+
+   [RFC6265]  Barth, A., "HTTP State Management Mechanism", RFC 6265,
+              DOI 10.17487/RFC6265, April 2011,
+              <https://www.rfc-editor.org/info/rfc6265>.
 
    [RFC6824]  Ford, A., Raiciu, C., Handley, M., and O. Bonaventure,
               "TCP Extensions for Multipath Operation with Multiple
@@ -409,6 +423,11 @@ Internet-Draft            linkable-identifiers             February 2018
               Considerations for Internet Protocols", RFC 6973,
               DOI 10.17487/RFC6973, July 2013,
               <https://www.rfc-editor.org/info/rfc6973>.
+
+   [RFC7232]  Fielding, R., Ed. and J. Reschke, Ed., "Hypertext Transfer
+              Protocol (HTTP/1.1): Conditional Requests", RFC 7232,
+              DOI 10.17487/RFC7232, June 2014,
+              <https://www.rfc-editor.org/info/rfc7232>.
 
    [RFC7413]  Cheng, Y., Chu, J., Radhakrishnan, S., and A. Jain, "TCP
               Fast Open", RFC 7413, DOI 10.17487/RFC7413, December 2014,
@@ -423,25 +442,6 @@ Author's Address
    United States of America
 
    Email: cawood@apple.com
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
