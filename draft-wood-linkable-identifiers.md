@@ -30,6 +30,7 @@ normative:
     RFC6973:
     RFC7232:
     RFC7413:
+    I-D.ietf-ntp-data-minimization:
     I-D.ietf-dnssd-privacy:
     Noise:
       title: The Noise Protocol Framework
@@ -130,7 +131,10 @@ when exposed on the network.
 - Ethernet: MAC addresses are fixed to specific devices. Unless frequently rotated,
 they are sticky identifiers.
 
-## Transport Layer
+<!-- ARP: ??? -->
+<!-- IKE/ESP: ??? -->
+
+## Transport and Session Layer
 
 - TCP {{RFC0793}}: TCP source ports may be sticky if reused across senders. For example,
 most operating systems allocate allocate ephemeral (short lived) ports to each new
@@ -149,29 +153,27 @@ an additional data sequence number (DSN) TCP option to allow receivers to deal w
 subflow packet arrival. The union of packet DSNs across subflows should yield a contiguous packet
 number sequence.
 
-<!-- - SCTP: multihome (IP sending addresses in INIT chunks, this is not a mandatory parameter as per  -->
-<!-- RFC4960), Initiate tag (used across multiple addresses), Address Families -->
-<!-- - RTP: application performance reporting -->
-
-## Session Layer
-
-- TLS: Prior to TLS 1.3 ((CITE)), significant information is exposed during TLS handshakes, including:
+- TLS ((CITE)): Prior to TLS 1.3, significant information is exposed during TLS handshakes, including:
 session identifiers (or re-used PSK identifiers in TLS 1.3), timestamps, random nonces, supported ciphersuites,
 certificates, and extensions. Many of these are common across all TLS clients -- specifically, ciphersuites,
 nonces, and timestamps. However, others may persist across active sessions, including: session identifiers (in TLS 1.2
 and earlier versions) and re-used PSK identifiers (in TLS 1.3). Without rotation, these re-used identifers
 are sticky.
 
-- DTLS: Datagram TLS ((CITE)) is a slightly modified variant of TLS aimed to run over datagram protocols
+- DTLS ((CITE)): Datagram TLS is a slightly modified variant of TLS aimed to run over datagram protocols
 such as UDP. In addition to identifiers exposed via TLS, DTLS adds cookie-based denial-of-service
 countermeasures. Servers issue stateless cookies to clients during a handshake, which must be replayed
 in cleartext by clients to prove ownership of its IP address. (This is similar to TFO cookies described
 above.) Additionally, DTLS 1.3 ((CITE)) is considering support of a static connection identifier (CID), which permits
 client address mobility. CIDs are specifically designed to not change across addresses.
 
-- QUIC: QUIC ((CITE)) is another secure transport protocol originally developed by Google and now being
+- QUIC ((CITE)): QUIC is another secure transport protocol originally developed by Google and now being
 standardized by the IETF. IETF-QUIC ((CITE)) uses TLS 1.3 for its handshake. In addition to identifiers
 exposed by TLS 1.3, QUIC has its own connection identifier (CID) used to permit address mobility.
+
+<!-- SCTP: multihome (IP sending addresses in INIT chunks, this is not a mandatory parameter as per RFC4960), Initiate tag (used across multiple addresses), Address Families -->
+<!-- RTP: application performance reporting -->
+<!-- SRTP: ??? -->
 
 ## Application Layer:
 
@@ -181,19 +183,31 @@ the state itself or tokens pointing to state kept at the endpoints.
 The Cookie header field {{RFC6265}} is de-facto the mechanism for web
 applications to uniquely identify their clients by generating a token
 and instructing the client to attach to any future requests.
-The ETag header field {{RFC7232}} enables the application to uniquely reference
-a resource which the client may cache. The application may returning unique
+The ETag header field {{RFC7232}} enables applications to uniquely reference
+a resource which the client may cache. Applications may return unique
 reference tokens to distinct clients.
-- DNS: SRV hostnames
-- DHCP: broadcast discover requests, hardware type, client hardware address, IP addresses
-(http://www.networksorcery.com/enp/protocol/dhcp.htm), transaction identifier
-- NTP: (mode 3 — client to server,
-https://tools.ietf.org/html/draft-ietf-ntp-data-minimization-01#section-3): Timestamps, poll field,
-precision field, all other fields (Stratum, Root Delay, Root Dispersion, Ref ID, Ref Timestamp,
-Origin Timestamp, Receive Timestamp)
 
-<!-- - IMAP: username/password login? -->
-<!-- Others to consider? IMAP, LDAP, IKE/ESP, SRTP, oath, SIP, SSH, SNMP, ICMP, ARP -->
+- DNS ((CITE)): SRV records often contain human-readable information specific to 
+particular devices, clients, or users. For example, printers may advertise
+its services with SRV records that contain a human-readable instance name.
+These are often not rotated as services change.
+
+- NTP ((CITE)): By default, mode 3 for NTP -- client to server -- sends several 
+source-specific fields in the clear to NTP servers, including: timestamps, poll, 
+and precision. These fields should be left empty or randomized as per {{I-D.ietf-ntp-data-minimization}}.
+Other fields that may link to clients include: Stratum, Root Delay, Root Dispersion, 
+Ref ID, Ref Timestamp, Origin Timestamp, and Receive Timestamp. 
+
+- DHCP ((CITE)): broadcast discover requests, hardware type, client hardware address, IP addresses
+(http://www.networksorcery.com/enp/protocol/dhcp.htm), transaction identifier
+
+<!-- IMAP: ??? -->
+<!-- LDAP: ??? -->
+<!-- OAuth: ??? -->
+<!-- SIP: ??? -->
+<!-- SSH: ??? -->
+<!-- SNMP: ??? -->
+<!-- ICMP: ??? -->
 
 # Limiting Linkable Identifiers
 
@@ -233,7 +247,8 @@ new identifiers. For example, instead of resuming a TLS session with an existing
 client may initiate a fresh handshake. As a simple rule, if an identifier at layer (N) changes,
 endpoints SHOULD use fresh identifiers for all lower layers, i.e., 1,.., (N-1). This means that
 new TLS sessions SHOULD be initiated from an endpoint with a fresh MAC address, IP address, and
-TCP source port.
+TCP source port. Note that clients behind NATs may not need to generate a fresh MAC or IP address,
+as they enjoy some measure of anonymity by design.
 
 In contrast, path linkability is more difficult to achieve, as it requires using fresh identifiers
 for each protocol field. (This may not always be technically feasible.) Moreover, protocols such
