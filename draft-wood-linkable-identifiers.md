@@ -16,7 +16,7 @@ author:
     ins: C. A. Wood
     name: Christopher A. Wood
     org: Apple Inc.
-    street: 1 Infinite Loop
+    street: One Apple Park Way
     city: Cupertino, California 95014
     country: United States of America
     email: cawood@apple.com
@@ -41,7 +41,15 @@ normative:
 
 --- abstract
 
-TODO
+Rotating public identifiers is often encouraged as best practice to protect
+against privacy violations. For example, regular MAC address randomization
+is a technique implemented to prevent device tracking across time and space. 
+Other protocols beyond those in the link layer also have public identifiers
+or parameters that should rotate over time. This document surveys such 
+privacy-related identifiers exposed by common Internet protocols at various 
+layers in a network stack. It provides advice for rotating linked identifiers
+such that privacy violations do not occur while rotating one identifier and 
+neglecting to rotate a related identifier.
 
 --- middle
 
@@ -233,10 +241,10 @@ over time, as shown below.
 
 Despite rotating all protocol identifiers beneath TLS, a static session identifier makes packet
 linkability trivial. Thus, a strict, yet safe rule for removing packet linkability is to rotate
-all identifiers in unison. Unfortunately, this strategy is problematic in practice. It would
+all linked identifiers in unison. Unfortunately, this strategy is problematic in practice. It would
 imply terminating active connections whenever an identifier changes (otherwise, linkability remains trivial).
 If MAC addresses are rotated on a regular basis, e.g., every 15 minutes, then connection lifetimes
-are bounded by this window.
+would be limited to this window.
 
 Moreover, there are multiple dimensions along which identifiers may be linked: in time, as identifiers
 are used and re-used by senders, and space, as identifiers are duplicated across multiple disjoint

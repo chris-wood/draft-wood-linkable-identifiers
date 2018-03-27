@@ -4,8 +4,8 @@
 
 Network Working Group                                            C. Wood
 Internet-Draft                                                Apple Inc.
-Intended status: Informational                            March 11, 2018
-Expires: September 12, 2018
+Intended status: Informational                            March 25, 2018
+Expires: September 26, 2018
 
 
                           Linkable Identifiers
@@ -13,7 +13,16 @@ Expires: September 12, 2018
 
 Abstract
 
-   TODO
+   Rotating public identifiers is often encouraged as best practice to
+   protect against privacy violations.  For example, regular MAC address
+   randomization is a technique implemented to prevent device tracking
+   across time and space.  Other protocols beyond those in the link
+   layer also have public identifiers or parameters that should rotate
+   over time.  This document surveys such privacy-related identifiers
+   exposed by common Internet protocols at various layers in a network
+   stack.  It provides advice for rotating linked identifiers such that
+   privacy violations do not occur while rotating one identifier and
+   neglecting to rotate a related identifier.
 
 Status of This Memo
 
@@ -30,7 +39,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on September 12, 2018.
+   This Internet-Draft will expire on September 26, 2018.
 
 Copyright Notice
 
@@ -41,28 +50,25 @@ Copyright Notice
    Provisions Relating to IETF Documents
    (http://trustee.ietf.org/license-info) in effect on the date of
    publication of this document.  Please review these documents
+
+
+
+Wood                   Expires September 26, 2018               [Page 1]
+
+Internet-Draft            linkable-identifiers                March 2018
+
+
    carefully, as they describe your rights and restrictions with respect
    to this document.  Code Components extracted from this document must
    include Simplified BSD License text as described in Section 4.e of
    the Trust Legal Provisions and are provided without warranty as
    described in the Simplified BSD License.
 
-
-
-
-
-
-
-Wood                   Expires September 12, 2018               [Page 1]
-
-Internet-Draft            linkable-identifiers                March 2018
-
-
 Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
    2.  Identifier Scope and Threat Model . . . . . . . . . . . . . .   3
-   3.  Sticky Protocol Identifiers . . . . . . . . . . . . . . . . .   3
+   3.  Sticky Protocol Identifiers . . . . . . . . . . . . . . . . .   4
      3.1.  Internet and Link Layer . . . . . . . . . . . . . . . . .   4
      3.2.  Transport and Session Layer . . . . . . . . . . . . . . .   4
      3.3.  Application Layer:  . . . . . . . . . . . . . . . . . . .   5
@@ -72,8 +78,8 @@ Table of Contents
    7.  Security Considerations . . . . . . . . . . . . . . . . . . .   7
    8.  Privacy Considerations  . . . . . . . . . . . . . . . . . . .   7
    9.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .   7
-   10. Normative References  . . . . . . . . . . . . . . . . . . . .   7
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   8
+   10. Normative References  . . . . . . . . . . . . . . . . . . . .   8
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   9
 
 1.  Introduction
 
@@ -96,6 +102,18 @@ Table of Contents
    example where this advice is not followed, wherein an IP address is
    changed yet the MAC address is not.
 
+
+
+
+
+
+
+
+Wood                   Expires September 26, 2018               [Page 2]
+
+Internet-Draft            linkable-identifiers                March 2018
+
+
    +---------------+        +---------------+
    |      ...      |  ....  |      ...      |
    +---------------+        +---------------+
@@ -106,13 +124,6 @@ Table of Contents
 
    +---------------------------------------->
                      time
-
-
-
-Wood                   Expires September 12, 2018               [Page 2]
-
-Internet-Draft            linkable-identifiers                March 2018
-
 
    A network adversary may trivially link these packets based on their
    common MAC address and continue to associate traffic with this
@@ -150,6 +161,15 @@ Internet-Draft            linkable-identifiers                March 2018
 
    3.  Terminator: An on-path adversary that terminates a connection,
        e.g., a TLS-terminating reverse proxy.  Note that there can be
+
+
+
+
+Wood                   Expires September 26, 2018               [Page 3]
+
+Internet-Draft            linkable-identifiers                March 2018
+
+
        distinct terminators for individual layers of network stack.
        E.g., one for TLS and another for HTTP.
 
@@ -162,14 +182,6 @@ Internet-Draft            linkable-identifiers                March 2018
    generating servers or, commonly, client algorithm, software
    configuration, or device-specific fields.  We categorize surveyed
    protocols by the OSI layer at which they operate.  Specifically, we
-
-
-
-Wood                   Expires September 12, 2018               [Page 3]
-
-Internet-Draft            linkable-identifiers                March 2018
-
-
    focus on Link, Internet, Transport, Session, and Application layers.
    (Our taxonomy may not match traditional OSI models, though we
    consider it sufficiently representative.)
@@ -207,6 +219,13 @@ Internet-Draft            linkable-identifiers                March 2018
       out-of-order subflow packet arrival.  The union of packet DSNs
       across subflows should yield a contiguous packet number sequence.
 
+
+
+Wood                   Expires September 26, 2018               [Page 4]
+
+Internet-Draft            linkable-identifiers                March 2018
+
+
    o  TLS ((CITE)): Prior to TLS 1.3, significant information is exposed
       during TLS handshakes, including: session identifiers (or re-used
       PSK identifiers in TLS 1.3), timestamps, random nonces, supported
@@ -216,15 +235,6 @@ Internet-Draft            linkable-identifiers                March 2018
       sessions, including: session identifiers (in TLS 1.2 and earlier
       versions) and re-used PSK identifiers (in TLS 1.3).  Without
       rotation, these re-used identifers are sticky.
-
-
-
-
-
-Wood                   Expires September 12, 2018               [Page 4]
-
-Internet-Draft            linkable-identifiers                March 2018
-
 
    o  DTLS ((CITE)): Datagram TLS is a slightly modified variant of TLS
       aimed to run over datagram protocols such as UDP.  In addition to
@@ -264,6 +274,14 @@ Internet-Draft            linkable-identifiers                March 2018
 
    o  NTP ((CITE)): By default, mode 3 for NTP - client to server -
       sends several source-specific fields in the clear to NTP servers,
+
+
+
+Wood                   Expires September 26, 2018               [Page 5]
+
+Internet-Draft            linkable-identifiers                March 2018
+
+
       including: timestamps, poll, and precision.  These fields should
       be left empty or randomized as per
       [I-D.ietf-ntp-data-minimization].  Other fields that may link to
@@ -274,13 +292,6 @@ Internet-Draft            linkable-identifiers                March 2018
       hardware address, IP addresses
       (http://www.networksorcery.com/enp/protocol/dhcp.htm), transaction
       identifier
-
-
-
-Wood                   Expires September 12, 2018               [Page 5]
-
-Internet-Draft            linkable-identifiers                March 2018
-
 
 4.  Limiting Linkable Identifiers
 
@@ -305,18 +316,27 @@ Internet-Draft            linkable-identifiers                March 2018
 
    Despite rotating all protocol identifiers beneath TLS, a static
    session identifier makes packet linkability trivial.  Thus, a strict,
-   yet safe rule for removing packet linkability is to rotate all
+   yet safe rule for removing packet linkability is to rotate all linked
    identifiers in unison.  Unfortunately, this strategy is problematic
    in practice.  It would imply terminating active connections whenever
    an identifier changes (otherwise, linkability remains trivial).  If
    MAC addresses are rotated on a regular basis, e.g., every 15 minutes,
-   then connection lifetimes are bounded by this window.
+   then connection lifetimes would be limited to this window.
 
    Moreover, there are multiple dimensions along which identifiers may
    be linked: in time, as identifiers are used and re-used by senders,
    and space, as identifiers are duplicated across multiple disjoint
    network paths.  We refer to these dimensions as time and path
    linkability, respectively.
+
+
+
+
+
+Wood                   Expires September 26, 2018               [Page 6]
+
+Internet-Draft            linkable-identifiers                March 2018
+
 
    Time linkability is arguably simpler to mitigate, since new
    connections over time may opt to use new identifiers.  For example,
@@ -328,15 +348,6 @@ Internet-Draft            linkable-identifiers                March 2018
    MAC address, IP address, and TCP source port.  Note that clients
    behind NATs may not need to generate a fresh MAC or IP address, as
    they enjoy some measure of anonymity by design.
-
-
-
-
-
-Wood                   Expires September 12, 2018               [Page 6]
-
-Internet-Draft            linkable-identifiers                March 2018
-
 
    In contrast, path linkability is more difficult to achieve, as it
    requires using fresh identifiers for each protocol field.  (This may
@@ -373,6 +384,16 @@ Internet-Draft            linkable-identifiers                March 2018
 
    TODO
 
+
+
+
+
+
+Wood                   Expires September 26, 2018               [Page 7]
+
+Internet-Draft            linkable-identifiers                March 2018
+
+
 10.  Normative References
 
    [I-D.ietf-dnssd-privacy]
@@ -386,13 +407,6 @@ Internet-Draft            linkable-identifiers                March 2018
               in progress), July 2017.
 
    [Noise]    "The Noise Protocol Framework", n.d..
-
-
-
-Wood                   Expires September 12, 2018               [Page 7]
-
-Internet-Draft            linkable-identifiers                March 2018
-
 
    [RFC0793]  Postel, J., "Transmission Control Protocol", STD 7,
               RFC 793, DOI 10.17487/RFC0793, September 1981,
@@ -429,6 +443,13 @@ Internet-Draft            linkable-identifiers                March 2018
               DOI 10.17487/RFC7232, June 2014, <https://www.rfc-
               editor.org/info/rfc7232>.
 
+
+
+Wood                   Expires September 26, 2018               [Page 8]
+
+Internet-Draft            linkable-identifiers                March 2018
+
+
    [RFC7413]  Cheng, Y., Chu, J., Radhakrishnan, S., and A. Jain, "TCP
               Fast Open", RFC 7413, DOI 10.17487/RFC7413, December 2014,
               <https://www.rfc-editor.org/info/rfc7413>.
@@ -437,7 +458,7 @@ Author's Address
 
    Christopher A. Wood
    Apple Inc.
-   1 Infinite Loop
+   One Apple Park Way
    Cupertino, California 95014
    United States of America
 
@@ -445,4 +466,39 @@ Author's Address
 
 
 
-Wood                   Expires September 12, 2018               [Page 8]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Wood                   Expires September 26, 2018               [Page 9]

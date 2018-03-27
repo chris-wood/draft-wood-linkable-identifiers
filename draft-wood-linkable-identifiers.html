@@ -303,9 +303,9 @@ address {
 
   <meta name="dct.creator" content="Wood, C." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-wood-linkable-identifiers-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2018-3-11" />
-  <meta name="dct.abstract" content="TODO" />
-  <meta name="description" content="TODO" />
+  <meta name="dct.issued" scheme="ISO8601" content="2018-3-25" />
+  <meta name="dct.abstract" content="Rotating public identifiers is often encouraged as best practice to protect against privacy violations. For example, regular MAC address randomization is a technique implemented to prevent device tracking across time and space.  Other protocols beyond those in the link layer also have public identifiers or parameters that should rotate over time. This document surveys such privacy-related identifiers exposed by common Internet protocols at various layers in a network stack. It provides advice for rotating linked identifiers such that privacy violations do not occur while rotating one identifier and neglecting to rotate a related identifier." />
+  <meta name="description" content="Rotating public identifiers is often encouraged as best practice to protect against privacy violations. For example, regular MAC address randomization is a technique implemented to prevent device tracking across time and space.  Other protocols beyond those in the link layer also have public identifiers or parameters that should rotate over time. This document surveys such privacy-related identifiers exposed by common Internet protocols at various layers in a network stack. It provides advice for rotating linked identifiers such that privacy violations do not occur while rotating one identifier and neglecting to rotate a related identifier." />
 
 </head>
 
@@ -324,10 +324,10 @@ address {
 </tr>
 <tr>
   <td class="left">Intended status: Informational</td>
-  <td class="right">March 11, 2018</td>
+  <td class="right">March 25, 2018</td>
 </tr>
 <tr>
-  <td class="left">Expires: September 12, 2018</td>
+  <td class="left">Expires: September 26, 2018</td>
   <td class="right"></td>
 </tr>
 
@@ -341,14 +341,14 @@ address {
   <h1 id="rfc.abstract">
   <a href="#rfc.abstract">Abstract</a>
 </h1>
-<p>TODO</p>
+<p>Rotating public identifiers is often encouraged as best practice to protect against privacy violations. For example, regular MAC address randomization is a technique implemented to prevent device tracking across time and space.  Other protocols beyond those in the link layer also have public identifiers or parameters that should rotate over time. This document surveys such privacy-related identifiers exposed by common Internet protocols at various layers in a network stack. It provides advice for rotating linked identifiers such that privacy violations do not occur while rotating one identifier and neglecting to rotate a related identifier.</p>
 <h1 id="rfc.status">
   <a href="#rfc.status">Status of This Memo</a>
 </h1>
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on September 12, 2018.</p>
+<p>This Internet-Draft will expire on September 26, 2018.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -446,7 +446,7 @@ address {
 +------------------------------------------&gt;
                   time
 </pre>
-<p id="rfc.section.4.p.2">Despite rotating all protocol identifiers beneath TLS, a static session identifier makes packet linkability trivial. Thus, a strict, yet safe rule for removing packet linkability is to rotate all identifiers in unison. Unfortunately, this strategy is problematic in practice. It would imply terminating active connections whenever an identifier changes (otherwise, linkability remains trivial).  If MAC addresses are rotated on a regular basis, e.g., every 15 minutes, then connection lifetimes are bounded by this window.</p>
+<p id="rfc.section.4.p.2">Despite rotating all protocol identifiers beneath TLS, a static session identifier makes packet linkability trivial. Thus, a strict, yet safe rule for removing packet linkability is to rotate all linked identifiers in unison. Unfortunately, this strategy is problematic in practice. It would imply terminating active connections whenever an identifier changes (otherwise, linkability remains trivial).  If MAC addresses are rotated on a regular basis, e.g., every 15 minutes, then connection lifetimes would be limited to this window.</p>
 <p id="rfc.section.4.p.3">Moreover, there are multiple dimensions along which identifiers may be linked: in time, as identifiers are used and re-used by senders, and space, as identifiers are duplicated across multiple disjoint network paths. We refer to these dimensions as time and path linkability, respectively.</p>
 <p id="rfc.section.4.p.4">Time linkability is arguably simpler to mitigate, since new connections over time may opt to use new identifiers. For example, instead of resuming a TLS session with an existing session ID, a client may initiate a fresh handshake. As a simple rule, if an identifier at layer (N) changes, endpoints SHOULD use fresh identifiers for all lower layers, i.e., 1,.., (N-1). This means that new TLS sessions SHOULD be initiated from an endpoint with a fresh MAC address, IP address, and TCP source port. Note that clients behind NATs may not need to generate a fresh MAC or IP address, as they enjoy some measure of anonymity by design.</p>
 <p id="rfc.section.4.p.5">In contrast, path linkability is more difficult to achieve, as it requires using fresh identifiers for each protocol field. (This may not always be technically feasible.) Moreover, protocols such as QUIC explicitly try to enable path linkability via connection-level identifiers (CIDs) to support multihoming endpoints. This makes path linkability impossible to mitigate. However, as multiple, disjoint paths may be operated by different entities, it may be the case that collusion is less common.</p>
@@ -539,7 +539,7 @@ address {
 	</span>
 	<span class="org vcardline">Apple Inc.</span>
 	<span class="adr">
-	  <span class="vcardline">1 Infinite Loop</span>
+	  <span class="vcardline">One Apple Park Way</span>
 
 	  <span class="vcardline">
 		<span class="locality">Cupertino, California 95014</span>,  
