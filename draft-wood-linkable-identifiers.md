@@ -32,12 +32,6 @@ normative:
     RFC7413:
     I-D.ietf-ntp-data-minimization:
     I-D.ietf-dnssd-privacy:
-    Noise:
-      title: The Noise Protocol Framework
-      url: http://noiseprotocol.org/noise.pdf
-      authors:
-        -
-          ins: Trevor Perrin
 
 --- abstract
 
@@ -139,8 +133,10 @@ when exposed on the network.
 - Ethernet: MAC addresses are fixed to specific devices. Unless frequently rotated,
 they are sticky identifiers.
 
+- IKEv2: Initiator Security Parameters Indexes (SPIs) are used as connection 
+identifiers instead of IP addresses. They are required to rotate for each new SA.
+
 <!-- ARP: ??? -->
-<!-- IKE/ESP: ??? -->
 
 ## Transport and Session Layer
 
