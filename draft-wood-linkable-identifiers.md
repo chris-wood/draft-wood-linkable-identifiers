@@ -25,6 +25,9 @@ normative:
     RFC0793:
     RFC2508:
     RFC2616:
+    RFC4941:
+    RFC5246:
+    RFC6347:
     RFC6265:
     RFC6824:
     RFC6973:
@@ -32,6 +35,8 @@ normative:
     RFC7413:
     I-D.ietf-ntp-data-minimization:
     I-D.ietf-dnssd-privacy:
+    I-D.ietf-quic-transport:
+    I-D.ietf-tls-dtls-connection-id:
 
 --- abstract
 
@@ -61,8 +66,13 @@ this association at the link layer.
 However, when multiple identifiers are simultaneously present on
 different layers of the stack, breaking the association at any
 individual layer might be insufficient to disassociate a host
-from their network traffic.
-For example, Huitema et al. {{I-D.ietf-dnssd-privacy}} say, "it is important
+from their network traffic. Linkability can also occur across protocols.
+For example, TLS connections are commonly preceded by DNS queries for a 
+particular endpoint (host name), e.g. example.com. Moreover, in the TLS handshake, 
+this same host name is sent in cleartext in the Server Name Indication extension.
+Thus, observing either the DNS query or TLS SNI reveals information about the other.
+
+Huitema et al. {{I-D.ietf-dnssd-privacy}} say, "it is important
 that the obfuscation of instance names is performed at the right time, and
 that the obfuscated names change in synchrony with other identifiers, such as
 MAC Addresses, IP Addresses or host names."
@@ -127,11 +137,13 @@ sufficiently representative.)
 
 ## Internet and Link Layer
 
-- IPv4 and IPv6: Static or infrequently rotating addresses are sticky identifiers
-when exposed on the network.
-
 - Ethernet: MAC addresses are fixed to specific devices. Unless frequently rotated,
 they are sticky identifiers.
+
+- IPv4 and IPv6: Static or infrequently rotating addresses are sticky identifiers
+when exposed on the network. Privacy Extensions for Stateless Address Autoconfiguration {{RFC4941}} 
+enhance IPv6 client privacy by, e.g., issuing new IPv6 /64 prefixes every day. The 64-bit 
+IID suffix remains random to deter linkability.
 
 - IKEv2: Initiator Security Parameters Indexes (SPIs) are used as connection 
 identifiers instead of IP addresses. They are required to rotate for each new SA.
@@ -157,22 +169,22 @@ an additional data sequence number (DSN) TCP option to allow receivers to deal w
 subflow packet arrival. The union of packet DSNs across subflows should yield a contiguous packet
 number sequence.
 
-- TLS ((CITE)): Prior to TLS 1.3, significant information is exposed during TLS handshakes, including:
+- TLS {{RFC5246}}: Prior to TLS 1.3, significant information is exposed during TLS handshakes, including:
 session identifiers (or re-used PSK identifiers in TLS 1.3), timestamps, random nonces, supported ciphersuites,
 certificates, and extensions. Many of these are common across all TLS clients -- specifically, ciphersuites,
 nonces, and timestamps. However, others may persist across active sessions, including: session identifiers (in TLS 1.2
 and earlier versions) and re-used PSK identifiers (in TLS 1.3). Without rotation, these re-used identifers
 are sticky.
 
-- DTLS ((CITE)): Datagram TLS is a slightly modified variant of TLS aimed to run over datagram protocols
+- DTLS {{RFC6347}}: Datagram TLS is a slightly modified variant of TLS aimed to run over datagram protocols
 such as UDP. In addition to identifiers exposed via TLS, DTLS adds cookie-based denial-of-service
 countermeasures. Servers issue stateless cookies to clients during a handshake, which must be replayed
 in cleartext by clients to prove ownership of its IP address. (This is similar to TFO cookies described
-above.) Additionally, DTLS 1.3 ((CITE)) is considering support of a static connection identifier (CID), which permits
-client address mobility. CIDs are specifically designed to not change across addresses.
+above.) Additionally, DTLS is considering support of a static connection identifier (CID) {{I-D.ietf-tls-dtls-connection-id}}, 
+which permits client address mobility. CIDs are specifically designed to not change across addresses.
 
-- QUIC ((CITE)): QUIC is another secure transport protocol originally developed by Google and now being
-standardized by the IETF. IETF-QUIC ((CITE)) uses TLS 1.3 for its handshake. In addition to identifiers
+- QUIC {{I-D.ietf-quic-transport}}: QUIC is another secure transport protocol originally developed by Google and now being
+standardized by the IETF. IETF-QUIC {{I-D.ietf-quic-transport}} uses TLS 1.3 for its handshake. In addition to identifiers
 exposed by TLS 1.3, QUIC has its own connection identifier (CID) used to permit address mobility.
 
 <!-- SCTP: multihome (IP sending addresses in INIT chunks, this is not a mandatory parameter as per RFC4960), Initiate tag (used across multiple addresses), Address Families -->
@@ -202,8 +214,8 @@ and precision. These fields should be left empty or randomized as per {{I-D.ietf
 Other fields that may link to clients include: Stratum, Root Delay, Root Dispersion, 
 Ref ID, Ref Timestamp, Origin Timestamp, and Receive Timestamp. 
 
-- DHCP ((CITE)): broadcast discover requests, hardware type, client hardware address, IP addresses
-(http://www.networksorcery.com/enp/protocol/dhcp.htm), transaction identifier
+<!-- - DHCP ((CITE)): broadcast discover requests, hardware type, client hardware address, IP addresses -->
+<!-- (http://www.networksorcery.com/enp/protocol/dhcp.htm), transaction identifier -->
 
 <!-- IMAP: ??? -->
 <!-- LDAP: ??? -->
@@ -239,31 +251,46 @@ Despite rotating all protocol identifiers beneath TLS, a static session identifi
 linkability trivial. Thus, a strict, yet safe rule for removing packet linkability is to rotate
 all linked identifiers in unison. Unfortunately, this strategy is problematic in practice. It would
 imply terminating active connections whenever an identifier changes (otherwise, linkability remains trivial).
-If MAC addresses are rotated on a regular basis, e.g., every 15 minutes, then connection lifetimes
-would be limited to this window.
+For example, if MAC addresses are rotated on a regular basis, e.g., every 15 minutes, 
+then connection lifetimes would be limited to this window.
 
-Moreover, there are multiple dimensions along which identifiers may be linked: in time, as identifiers
-are used and re-used by senders, and space, as identifiers are duplicated across multiple disjoint
-network paths. We refer to these dimensions as time and path linkability, respectively.
+A more sensible policy would be to restrict identifier rotation to layers which are exposed
+to the same adversary. For example, origin MAC addresses may not be visible to the destination.
+In this case, rotating IP addresses and TLS session IDs is not required to prevent packet
+linkability by an adversary who does not see the origin MAC address. A practical threat model
+is one in which IP- to TLS-layer information is exposed to the same on-path adversary. 
+Identifiers beneath IP are visible to local adversaries, which may not be an issue, and those
+above TLS are visible to authenticated peers. 
+
+The scope of an identifier includes are all other protocols and layers observable by the same
+adversary. 
+
+## Time and Path Linkability
+
+There are multiple dimensions along which identifiers may be linked: (1) time, as identifiers
+are used and re-used by senders, and (2) space, as identifiers are duplicated across multiple disjoint
+network paths, possibly by different protocols. We refer to these dimensions as time and path 
+linkability, respectively.
 
 Time linkability is arguably simpler to mitigate, since new connections over time may opt to use
 new identifiers. For example, instead of resuming a TLS session with an existing session ID, a
-client may initiate a fresh handshake. As a simple rule, if an identifier at layer (N) changes,
-endpoints SHOULD use fresh identifiers for all lower layers, i.e., 1,.., (N-1). This means that
+client may initiate a fresh handshake. As a simple rule, if an identifier in the same scope changes,
+endpoints SHOULD use fresh identifiers for all other protocols in that scope. This means that
 new TLS sessions SHOULD be initiated from an endpoint with a fresh MAC address, IP address, and
 TCP source port. Note that clients behind NATs may not need to generate a fresh MAC or IP address,
 as they enjoy some measure of anonymity by design.
 
 In contrast, path linkability is more difficult to achieve, as it requires using fresh identifiers
-for each protocol field. (This may not always be technically feasible.) Moreover, protocols such
-as QUIC explicitly try to enable path linkability via connection-level identifiers (CIDs) to support
-multihoming endpoints. This makes path linkability impossible to mitigate. However, as multiple,
-disjoint paths may be operated by different entities, it may be the case that collusion is less common.
+for each protocol field. This may not always be technically feasible. For example, DNS query names
+are also intentionally used as the TLS SNI. Moreover, protocols such as QUIC explicitly try to enable 
+path linkability via connection-level identifiers (CIDs) to support multihoming endpoints. This makes 
+path linkability impossible to mitigate. However, as multiple, disjoint paths may be operated by 
+different entities (e.g., ISPs), collusion may be less common.
 
 # Timing Considerations
 
 Advice in this document SHOULD NOT be interpreted as guarantees for preventing linkability. Rather,
-they aim to increase linkability complexity. It is difficult to prevent path-linkability without
+it aims to increase linkability complexity. It is difficult to prevent path-linkability without
 modifying protocols above the layer at which identifiers rotate. For example, assuming MPTCP subflows
 were unlinkable across paths, shared transport state controlling the rate of data transmission may
 be sufficient to link these flows.
@@ -274,7 +301,7 @@ This document has no request to IANA.
 
 # Security Considerations
 
-TODO
+This document doe snot introduce any new security protocol.
 
 # Privacy Considerations
 

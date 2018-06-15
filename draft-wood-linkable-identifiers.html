@@ -289,6 +289,7 @@ address {
 <link href="#rfc.section.3.2" rel="Chapter" title="3.2 Transport and Session Layer"/>
 <link href="#rfc.section.3.3" rel="Chapter" title="3.3 Application Layer:"/>
 <link href="#rfc.section.4" rel="Chapter" title="4 Limiting Linkable Identifiers"/>
+<link href="#rfc.section.4.1" rel="Chapter" title="4.1 Time and Path Linkability"/>
 <link href="#rfc.section.5" rel="Chapter" title="5 Timing Considerations"/>
 <link href="#rfc.section.6" rel="Chapter" title="6 IANA Considerations"/>
 <link href="#rfc.section.7" rel="Chapter" title="7 Security Considerations"/>
@@ -303,7 +304,7 @@ address {
 
   <meta name="dct.creator" content="Wood, C." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-wood-linkable-identifiers-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2018-3-25" />
+  <meta name="dct.issued" scheme="ISO8601" content="2018-6-15" />
   <meta name="dct.abstract" content="Rotating public identifiers is often encouraged as best practice to protect against privacy violations. For example, regular MAC address randomization is a technique implemented to prevent device tracking across time and space.  Other protocols beyond those in the link layer also have public identifiers or parameters that should rotate over time. This document surveys such privacy-related identifiers exposed by common Internet protocols at various layers in a network stack. It provides advice for rotating linked identifiers such that privacy violations do not occur while rotating one identifier and neglecting to rotate a related identifier." />
   <meta name="description" content="Rotating public identifiers is often encouraged as best practice to protect against privacy violations. For example, regular MAC address randomization is a technique implemented to prevent device tracking across time and space.  Other protocols beyond those in the link layer also have public identifiers or parameters that should rotate over time. This document surveys such privacy-related identifiers exposed by common Internet protocols at various layers in a network stack. It provides advice for rotating linked identifiers such that privacy violations do not occur while rotating one identifier and neglecting to rotate a related identifier." />
 
@@ -324,10 +325,10 @@ address {
 </tr>
 <tr>
   <td class="left">Intended status: Informational</td>
-  <td class="right">March 25, 2018</td>
+  <td class="right">June 15, 2018</td>
 </tr>
 <tr>
-  <td class="left">Expires: September 26, 2018</td>
+  <td class="left">Expires: December 17, 2018</td>
   <td class="right"></td>
 </tr>
 
@@ -348,7 +349,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on September 26, 2018.</p>
+<p>This Internet-Draft will expire on December 17, 2018.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -367,7 +368,8 @@ address {
 <li>3.2.   <a href="#rfc.section.3.2">Transport and Session Layer</a></li>
 <li>3.3.   <a href="#rfc.section.3.3">Application Layer:</a></li>
 </ul><li>4.   <a href="#rfc.section.4">Limiting Linkable Identifiers</a></li>
-<li>5.   <a href="#rfc.section.5">Timing Considerations</a></li>
+<ul><li>4.1.   <a href="#rfc.section.4.1">Time and Path Linkability</a></li>
+</ul><li>5.   <a href="#rfc.section.5">Timing Considerations</a></li>
 <li>6.   <a href="#rfc.section.6">IANA Considerations</a></li>
 <li>7.   <a href="#rfc.section.7">Security Considerations</a></li>
 <li>8.   <a href="#rfc.section.8">Privacy Considerations</a></li>
@@ -379,7 +381,8 @@ address {
   </ul>
 
   <h1 id="rfc.section.1"><a href="#rfc.section.1">1.</a> <a href="#introduction" id="introduction">Introduction</a></h1>
-<p><a href="#RFC6973">[RFC6973]</a> defines the correlation of information relevant to or associated with a specific user as a significant attack on privacy.  Different layers of the network stack use identifiers to uniquely address hosts or information flows.  To mitigate the privacy concern, many standards suggest randomizing or otherwise rotating such identifiers on a regular basis.  For example, a MAC address may be used to link otherwise unrelated network packets to a single device. Rotating the MAC address prevents this association at the link layer.  However, when multiple identifiers are simultaneously present on different layers of the stack, breaking the association at any individual layer might be insufficient to disassociate a host from their network traffic.  For example, Huitema et al. <a href="#I-D.ietf-dnssd-privacy">[I-D.ietf-dnssd-privacy]</a> say, &#8220;it is important that the obfuscation of instance names is performed at the right time, and that the obfuscated names change in synchrony with other identifiers, such as MAC Addresses, IP Addresses or host names.&#8221; Consider the following example where this advice is not followed, wherein an IP address is changed yet the MAC address is not.</p>
+<p><a href="#RFC6973">[RFC6973]</a> defines the correlation of information relevant to or associated with a specific user as a significant attack on privacy.  Different layers of the network stack use identifiers to uniquely address hosts or information flows.  To mitigate the privacy concern, many standards suggest randomizing or otherwise rotating such identifiers on a regular basis.  For example, a MAC address may be used to link otherwise unrelated network packets to a single device. Rotating the MAC address prevents this association at the link layer.  However, when multiple identifiers are simultaneously present on different layers of the stack, breaking the association at any individual layer might be insufficient to disassociate a host from their network traffic. Linkability can also occur across protocols.  For example, TLS connections are commonly preceded by DNS queries for a particular endpoint (host name), e.g. example.com. Moreover, in the TLS handshake, this same host name is sent in cleartext in the Server Name Indication extension.  Thus, observing either the DNS query or TLS SNI reveals information about the other.</p>
+<p id="rfc.section.1.p.2">Huitema et al. <a href="#I-D.ietf-dnssd-privacy">[I-D.ietf-dnssd-privacy]</a> say, &#8220;it is important that the obfuscation of instance names is performed at the right time, and that the obfuscated names change in synchrony with other identifiers, such as MAC Addresses, IP Addresses or host names.&#8221; Consider the following example where this advice is not followed, wherein an IP address is changed yet the MAC address is not.</p>
 <pre>
 +---------------+        +---------------+
 |      ...      |  ....  |      ...      |
@@ -392,7 +395,7 @@ address {
 +----------------------------------------&gt;
                   time
 </pre>
-<p id="rfc.section.1.p.2">A network adversary may trivially link these packets based on their common MAC address and continue to associate traffic with this particular host based on IP address B even if the MAC address eventually changes in the future.  In this document, we outline simple rules that SHOULD be followed by protocol implementations to avoid such linkability.  We then survey protocols developed inside the IETF and out, and identify their sticky identifiers. Results were obtained by analyzing protocol documentation and specifications, and also scanning packet traces captured from protocols in practice on common systems.</p>
+<p id="rfc.section.1.p.3">A network adversary may trivially link these packets based on their common MAC address and continue to associate traffic with this particular host based on IP address B even if the MAC address eventually changes in the future.  In this document, we outline simple rules that SHOULD be followed by protocol implementations to avoid such linkability.  We then survey protocols developed inside the IETF and out, and identify their sticky identifiers. Results were obtained by analyzing protocol documentation and specifications, and also scanning packet traces captured from protocols in practice on common systems.</p>
 <h1 id="rfc.section.2"><a href="#rfc.section.2">2.</a> <a href="#identifier-scope-and-threat-model" id="identifier-scope-and-threat-model">Identifier Scope and Threat Model</a></h1>
 <p id="rfc.section.2.p.1">Not all packet or datagram identifiers are visible end-to-end in a client-server interaction. For example, MAC addresses are only visible within on local subnets.  IP addresses are only visible between endpoints. (In systems such as Tor, source and destination addresses change at each circuit hop.) Thus, threats to identifier linkability depend on the threat model under consideration. Off-path adversaries are generally not a problem since they do not have access to datagrams in flight. On-path adversaries may exist at various locations relative to an endpoint (sender or receiver) on a path, e.g., in a local subnet, as an intermediate router or middlebox between two endpoints, or as a TLS terminating reverse proxy. In this document, we categorize these three types of adversaries as follows:</p>
 <p/>
@@ -408,8 +411,9 @@ address {
 <p/>
 
 <ul>
-  <li>IPv4 and IPv6: Static or infrequently rotating addresses are sticky identifiers when exposed on the network.</li>
   <li>Ethernet: MAC addresses are fixed to specific devices. Unless frequently rotated, they are sticky identifiers.</li>
+  <li>IPv4 and IPv6: Static or infrequently rotating addresses are sticky identifiers when exposed on the network. Privacy Extensions for Stateless Address Autoconfiguration <a href="#RFC4941">[RFC4941]</a> enhance IPv6 client privacy by, e.g., issuing new IPv6 /64 prefixes every day. The 64-bit IID suffix remains random to deter linkability.</li>
+  <li>IKEv2: Initiator Security Parameters Indexes (SPIs) are used as connection identifiers instead of IP addresses. They are required to rotate for each new SA.</li>
 </ul>
 <h1 id="rfc.section.3.2"><a href="#rfc.section.3.2">3.2.</a> <a href="#transport-and-session-layer" id="transport-and-session-layer">Transport and Session Layer</a></h1>
 <p/>
@@ -417,9 +421,9 @@ address {
 <ul>
   <li>TCP <a href="#RFC0793">[RFC0793]</a>: TCP source ports may be sticky if reused across senders. For example, most operating systems allocate allocate ephemeral (short lived) ports to each new connection. Per IANA allocations, ephemeral ports range from 49152 to 65535 (2^15+2^14 to 2^16&#8722;1) [http://www.iana.org/assignments/port-numbers]. However, this does not prevent an application from re-using port across connections. Destination are also intentionally sticky, since they identify services offered by endpoints. Therefore, reusing a destination port does not lead to decreased linkability. Moreover, with TCP Fast Open (TFO) <a href="#RFC7413">[RFC7413]</a>, servers give clients plaintext cookies that must be re-used when resuming a TCP+TFO connection. Clients do not modify these server cookies, which therefore means they can be tracked.</li>
   <li>MPTCP <a href="#RFC6824">[RFC6824]</a>: Connection tokens or IDs are explicitly used to link MPTCP subflows between IP address pairs. These tokens are only exposed during flow management operations, e.g., when creating new subflows. Normal data transfer uses TCP sequence numbers to bypass middlebox interference and an additional data sequence number (DSN) TCP option to allow receivers to deal with out-of-order subflow packet arrival. The union of packet DSNs across subflows should yield a contiguous packet number sequence.</li>
-  <li>TLS ((CITE)): Prior to TLS 1.3, significant information is exposed during TLS handshakes, including: session identifiers (or re-used PSK identifiers in TLS 1.3), timestamps, random nonces, supported ciphersuites, certificates, and extensions. Many of these are common across all TLS clients &#8211; specifically, ciphersuites, nonces, and timestamps. However, others may persist across active sessions, including: session identifiers (in TLS 1.2 and earlier versions) and re-used PSK identifiers (in TLS 1.3). Without rotation, these re-used identifers are sticky.</li>
-  <li>DTLS ((CITE)): Datagram TLS is a slightly modified variant of TLS aimed to run over datagram protocols such as UDP. In addition to identifiers exposed via TLS, DTLS adds cookie-based denial-of-service countermeasures. Servers issue stateless cookies to clients during a handshake, which must be replayed in cleartext by clients to prove ownership of its IP address. (This is similar to TFO cookies described above.) Additionally, DTLS 1.3 ((CITE)) is considering support of a static connection identifier (CID), which permits client address mobility. CIDs are specifically designed to not change across addresses.</li>
-  <li>QUIC ((CITE)): QUIC is another secure transport protocol originally developed by Google and now being standardized by the IETF. IETF-QUIC ((CITE)) uses TLS 1.3 for its handshake. In addition to identifiers exposed by TLS 1.3, QUIC has its own connection identifier (CID) used to permit address mobility.</li>
+  <li>TLS <a href="#RFC5246">[RFC5246]</a>: Prior to TLS 1.3, significant information is exposed during TLS handshakes, including: session identifiers (or re-used PSK identifiers in TLS 1.3), timestamps, random nonces, supported ciphersuites, certificates, and extensions. Many of these are common across all TLS clients &#8211; specifically, ciphersuites, nonces, and timestamps. However, others may persist across active sessions, including: session identifiers (in TLS 1.2 and earlier versions) and re-used PSK identifiers (in TLS 1.3). Without rotation, these re-used identifers are sticky.</li>
+  <li>DTLS <a href="#RFC6347">[RFC6347]</a>: Datagram TLS is a slightly modified variant of TLS aimed to run over datagram protocols such as UDP. In addition to identifiers exposed via TLS, DTLS adds cookie-based denial-of-service countermeasures. Servers issue stateless cookies to clients during a handshake, which must be replayed in cleartext by clients to prove ownership of its IP address. (This is similar to TFO cookies described above.) Additionally, DTLS is considering support of a static connection identifier (CID) <a href="#I-D.ietf-tls-dtls-connection-id">[I-D.ietf-tls-dtls-connection-id]</a>, which permits client address mobility. CIDs are specifically designed to not change across addresses.</li>
+  <li>QUIC <a href="#I-D.ietf-quic-transport">[I-D.ietf-quic-transport]</a>: QUIC is another secure transport protocol originally developed by Google and now being standardized by the IETF. IETF-QUIC <a href="#I-D.ietf-quic-transport">[I-D.ietf-quic-transport]</a> uses TLS 1.3 for its handshake. In addition to identifiers exposed by TLS 1.3, QUIC has its own connection identifier (CID) used to permit address mobility.</li>
 </ul>
 <h1 id="rfc.section.3.3"><a href="#rfc.section.3.3">3.3.</a> <a href="#application-layer" id="application-layer">Application Layer:</a></h1>
 <p/>
@@ -428,7 +432,6 @@ address {
   <li>HTTP <a href="#RFC2616">[RFC2616]</a>: While HTTP is a stateless protocol, it enables applications to define state-keeping mechanisms in header fields. The fields might carry the state itself or tokens pointing to state kept at the endpoints.  The Cookie header field <a href="#RFC6265">[RFC6265]</a> is de-facto the mechanism for web applications to uniquely identify their clients by generating a token and instructing the client to attach to any future requests.  The ETag header field <a href="#RFC7232">[RFC7232]</a> enables applications to uniquely reference a resource which the client may cache. Applications may return unique reference tokens to distinct clients.</li>
   <li>DNS ((CITE)): SRV records often contain human-readable information specific to particular devices, clients, or users. For example, printers may advertise its services with SRV records that contain a human-readable instance name.  These are often not rotated as services change.</li>
   <li>NTP ((CITE)): By default, mode 3 for NTP &#8211; client to server &#8211; sends several source-specific fields in the clear to NTP servers, including: timestamps, poll, and precision. These fields should be left empty or randomized as per <a href="#I-D.ietf-ntp-data-minimization">[I-D.ietf-ntp-data-minimization]</a>.  Other fields that may link to clients include: Stratum, Root Delay, Root Dispersion, Ref ID, Ref Timestamp, Origin Timestamp, and Receive Timestamp.</li>
-  <li>DHCP ((CITE)): broadcast discover requests, hardware type, client hardware address, IP addresses (http://www.networksorcery.com/enp/protocol/dhcp.htm), transaction identifier</li>
 </ul>
 <h1 id="rfc.section.4"><a href="#rfc.section.4">4.</a> <a href="#limiting-linkable-identifiers" id="limiting-linkable-identifiers">Limiting Linkable Identifiers</a></h1>
 <p id="rfc.section.4.p.1">The introductory example illustrating packet linkability using MAC addresses is one of many possible ways in which an attacker may link packets. As another hypothetical example, assume that IP address and MAC addresses were properly rotated. Moreover, assume TLS session IDs were reused over time, as shown below.</p>
@@ -446,16 +449,19 @@ address {
 +------------------------------------------&gt;
                   time
 </pre>
-<p id="rfc.section.4.p.2">Despite rotating all protocol identifiers beneath TLS, a static session identifier makes packet linkability trivial. Thus, a strict, yet safe rule for removing packet linkability is to rotate all linked identifiers in unison. Unfortunately, this strategy is problematic in practice. It would imply terminating active connections whenever an identifier changes (otherwise, linkability remains trivial).  If MAC addresses are rotated on a regular basis, e.g., every 15 minutes, then connection lifetimes would be limited to this window.</p>
-<p id="rfc.section.4.p.3">Moreover, there are multiple dimensions along which identifiers may be linked: in time, as identifiers are used and re-used by senders, and space, as identifiers are duplicated across multiple disjoint network paths. We refer to these dimensions as time and path linkability, respectively.</p>
-<p id="rfc.section.4.p.4">Time linkability is arguably simpler to mitigate, since new connections over time may opt to use new identifiers. For example, instead of resuming a TLS session with an existing session ID, a client may initiate a fresh handshake. As a simple rule, if an identifier at layer (N) changes, endpoints SHOULD use fresh identifiers for all lower layers, i.e., 1,.., (N-1). This means that new TLS sessions SHOULD be initiated from an endpoint with a fresh MAC address, IP address, and TCP source port. Note that clients behind NATs may not need to generate a fresh MAC or IP address, as they enjoy some measure of anonymity by design.</p>
-<p id="rfc.section.4.p.5">In contrast, path linkability is more difficult to achieve, as it requires using fresh identifiers for each protocol field. (This may not always be technically feasible.) Moreover, protocols such as QUIC explicitly try to enable path linkability via connection-level identifiers (CIDs) to support multihoming endpoints. This makes path linkability impossible to mitigate. However, as multiple, disjoint paths may be operated by different entities, it may be the case that collusion is less common.</p>
+<p id="rfc.section.4.p.2">Despite rotating all protocol identifiers beneath TLS, a static session identifier makes packet linkability trivial. Thus, a strict, yet safe rule for removing packet linkability is to rotate all linked identifiers in unison. Unfortunately, this strategy is problematic in practice. It would imply terminating active connections whenever an identifier changes (otherwise, linkability remains trivial).  For example, if MAC addresses are rotated on a regular basis, e.g., every 15 minutes, then connection lifetimes would be limited to this window.</p>
+<p id="rfc.section.4.p.3">A more sensible policy would be to restrict identifier rotation to layers which are exposed to the same adversary. For example, origin MAC addresses may not be visible to the destination.  In this case, rotating IP addresses and TLS session IDs is not required to prevent packet linkability by an adversary who does not see the origin MAC address. A practical threat model is one in which IP- to TLS-layer information is exposed to the same on-path adversary.  Identifiers beneath IP are visible to local adversaries, which may not be an issue, and those above TLS are visible to authenticated peers.</p>
+<p id="rfc.section.4.p.4">The scope of an identifier includes are all other protocols and layers observable by the same adversary.</p>
+<h1 id="rfc.section.4.1"><a href="#rfc.section.4.1">4.1.</a> <a href="#time-and-path-linkability" id="time-and-path-linkability">Time and Path Linkability</a></h1>
+<p id="rfc.section.4.1.p.1">There are multiple dimensions along which identifiers may be linked: (1) time, as identifiers are used and re-used by senders, and (2) space, as identifiers are duplicated across multiple disjoint network paths, possibly by different protocols. We refer to these dimensions as time and path linkability, respectively.</p>
+<p id="rfc.section.4.1.p.2">Time linkability is arguably simpler to mitigate, since new connections over time may opt to use new identifiers. For example, instead of resuming a TLS session with an existing session ID, a client may initiate a fresh handshake. As a simple rule, if an identifier in the same scope changes, endpoints SHOULD use fresh identifiers for all other protocols in that scope. This means that new TLS sessions SHOULD be initiated from an endpoint with a fresh MAC address, IP address, and TCP source port. Note that clients behind NATs may not need to generate a fresh MAC or IP address, as they enjoy some measure of anonymity by design.</p>
+<p id="rfc.section.4.1.p.3">In contrast, path linkability is more difficult to achieve, as it requires using fresh identifiers for each protocol field. This may not always be technically feasible. For example, DNS query names are also intentionally used as the TLS SNI. Moreover, protocols such as QUIC explicitly try to enable path linkability via connection-level identifiers (CIDs) to support multihoming endpoints. This makes path linkability impossible to mitigate. However, as multiple, disjoint paths may be operated by different entities (e.g., ISPs), collusion may be less common.</p>
 <h1 id="rfc.section.5"><a href="#rfc.section.5">5.</a> <a href="#timing-considerations" id="timing-considerations">Timing Considerations</a></h1>
-<p id="rfc.section.5.p.1">Advice in this document SHOULD NOT be interpreted as guarantees for preventing linkability. Rather, they aim to increase linkability complexity. It is difficult to prevent path-linkability without modifying protocols above the layer at which identifiers rotate. For example, assuming MPTCP subflows were unlinkable across paths, shared transport state controlling the rate of data transmission may be sufficient to link these flows.</p>
+<p id="rfc.section.5.p.1">Advice in this document SHOULD NOT be interpreted as guarantees for preventing linkability. Rather, it aims to increase linkability complexity. It is difficult to prevent path-linkability without modifying protocols above the layer at which identifiers rotate. For example, assuming MPTCP subflows were unlinkable across paths, shared transport state controlling the rate of data transmission may be sufficient to link these flows.</p>
 <h1 id="rfc.section.6"><a href="#rfc.section.6">6.</a> <a href="#iana-considerations" id="iana-considerations">IANA Considerations</a></h1>
 <p id="rfc.section.6.p.1">This document has no request to IANA.</p>
 <h1 id="rfc.section.7"><a href="#rfc.section.7">7.</a> <a href="#security-considerations" id="security-considerations">Security Considerations</a></h1>
-<p id="rfc.section.7.p.1">TODO</p>
+<p id="rfc.section.7.p.1">This document doe snot introduce any new security protocol.</p>
 <h1 id="rfc.section.8"><a href="#rfc.section.8">8.</a> <a href="#privacy-considerations" id="privacy-considerations">Privacy Considerations</a></h1>
 <p id="rfc.section.8.p.1">TODO</p>
 <h1 id="rfc.section.9"><a href="#rfc.section.9">9.</a> <a href="#acknowledgments" id="acknowledgments">Acknowledgments</a></h1>
@@ -467,7 +473,7 @@ address {
       <td class="reference">
         <b id="I-D.ietf-dnssd-privacy">[I-D.ietf-dnssd-privacy]</b>
       </td>
-      <td class="top"><a>Huitema, C.</a> and <a>D. Kaiser</a>, <a href="http://tools.ietf.org/html/draft-ietf-dnssd-privacy-03">Privacy Extensions for DNS-SD</a>", Internet-Draft draft-ietf-dnssd-privacy-03, September 2017.</td>
+      <td class="top"><a>Huitema, C.</a> and <a>D. Kaiser</a>, "<a href="http://tools.ietf.org/html/draft-ietf-dnssd-privacy-04">Privacy Extensions for DNS-SD</a>", Internet-Draft draft-ietf-dnssd-privacy-04, April 2018.</td>
     </tr>
     <tr>
       <td class="reference">
@@ -475,7 +481,18 @@ address {
       </td>
       <td class="top"><a>Franke, D.</a> and <a>A. Malhotra</a>, "<a href="http://tools.ietf.org/html/draft-ietf-ntp-data-minimization-01">NTP Client Data Minimization</a>", Internet-Draft draft-ietf-ntp-data-minimization-01, July 2017.</td>
     </tr>
-    <tr><td class="reference"><b id="Noise">[Noise]</b></td><td class="top"><a>The Noise Protocol Framework</a>", n.d..</td>, "</tr>
+    <tr>
+      <td class="reference">
+        <b id="I-D.ietf-quic-transport">[I-D.ietf-quic-transport]</b>
+      </td>
+      <td class="top"><a>Iyengar, J.</a> and <a>M. Thomson</a>, "<a href="http://tools.ietf.org/html/draft-ietf-quic-transport-12">QUIC: A UDP-Based Multiplexed and Secure Transport</a>", Internet-Draft draft-ietf-quic-transport-12, May 2018.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="I-D.ietf-tls-dtls-connection-id">[I-D.ietf-tls-dtls-connection-id]</b>
+      </td>
+      <td class="top"><a>Rescorla, E.</a>, <a>Tschofenig, H.</a>, <a>Fossati, T.</a> and <a>T. Gondrom</a>, "<a href="http://tools.ietf.org/html/draft-ietf-tls-dtls-connection-id-00">The Datagram Transport Layer Security (DTLS) Connection Identifier</a>", Internet-Draft draft-ietf-tls-dtls-connection-id-00, December 2017.</td>
+    </tr>
     <tr>
       <td class="reference">
         <b id="RFC0793">[RFC0793]</b>
@@ -496,9 +513,27 @@ address {
     </tr>
     <tr>
       <td class="reference">
+        <b id="RFC4941">[RFC4941]</b>
+      </td>
+      <td class="top"><a>Narten, T.</a>, <a>Draves, R.</a> and <a>S. Krishnan</a>, "<a href="http://tools.ietf.org/html/rfc4941">Privacy Extensions for Stateless Address Autoconfiguration in IPv6</a>", RFC 4941, DOI 10.17487/RFC4941, September 2007.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC5246">[RFC5246]</b>
+      </td>
+      <td class="top"><a>Dierks, T.</a> and <a>E. Rescorla</a>, "<a href="http://tools.ietf.org/html/rfc5246">The Transport Layer Security (TLS) Protocol Version 1.2</a>", RFC 5246, DOI 10.17487/RFC5246, August 2008.</td>
+    </tr>
+    <tr>
+      <td class="reference">
         <b id="RFC6265">[RFC6265]</b>
       </td>
       <td class="top"><a>Barth, A.</a>, "<a href="http://tools.ietf.org/html/rfc6265">HTTP State Management Mechanism</a>", RFC 6265, DOI 10.17487/RFC6265, April 2011.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC6347">[RFC6347]</b>
+      </td>
+      <td class="top"><a>Rescorla, E.</a> and <a>N. Modadugu</a>, "<a href="http://tools.ietf.org/html/rfc6347">Datagram Transport Layer Security Version 1.2</a>", RFC 6347, DOI 10.17487/RFC6347, January 2012.</td>
     </tr>
     <tr>
       <td class="reference">
