@@ -23,10 +23,12 @@ author:
 
 normative:
     RFC0793:
+    RFC1035:
     RFC2508:
     RFC2616:
     RFC4941:
     RFC5246:
+    RFC5905:
     RFC6347:
     RFC6265:
     RFC6824:
@@ -40,15 +42,15 @@ normative:
 
 --- abstract
 
-Rotating public identifiers is often encouraged as best practice to protect
-against privacy violations. For example, regular MAC address randomization
-is a technique implemented to prevent device tracking across time and space. 
+Rotating public identifiers is encouraged as best practice as a means of 
+protecting endpoint privacy. For example, regular MAC address randomization
+helps mitigate device tracking across time and space. 
 Other protocols beyond those in the link layer also have public identifiers
-or parameters that should rotate over time. This document surveys such 
-privacy-related identifiers exposed by common Internet protocols at various 
-layers in a network stack. It provides advice for rotating linked identifiers
-such that privacy violations do not occur while rotating one identifier and 
-neglecting to rotate a related identifier.
+or parameters that should rotate over time, and in unison with coupled protocol
+identifiers. This document surveys such privacy-related identifiers exposed by 
+common Internet protocols at various layers in a network stack. It provides 
+advice for rotating linked identifiers such that privacy violations do not 
+occur from rotating one identifier while neglecting to rotate coupled identifiers.
 
 --- middle
 
@@ -101,25 +103,6 @@ We then survey protocols developed inside the IETF and out, and identify their
 sticky identifiers. Results were obtained by analyzing protocol documentation
 and specifications, and also scanning packet traces captured from protocols in
 practice on common systems.
-
-# Identifier Scope and Threat Model
-
-Not all packet or datagram identifiers are visible end-to-end in a client-server
-interaction. For example, MAC addresses are only visible within on local subnets.
-IP addresses are only visible between endpoints. (In systems such as Tor,
-source and destination addresses change at each circuit hop.) Thus, threats to identifier linkability
-depend on the threat model under consideration. Off-path adversaries are generally not a problem since
-they do not have access to datagrams in flight. On-path adversaries may exist at various locations
-relative to an endpoint (sender or receiver) on a path, e.g., in a local subnet, as an intermediate router
-or middlebox between two endpoints, or as a TLS terminating reverse proxy. In this document, we categorize
-these three types of adversaries as follows:
-
-1. Local: An on-path adversary belonging to the same local subnet as an endpoint, a switch.
-2. Intermediate: An on-path adversary that observes datagrams in flight but does not
-terminate a (TCP or TLS) connection, e.g., a middlebox or performance enhancing proxy (PEP).
-3. Terminator: An on-path adversary that terminates a connection, e.g., a TLS-terminating reverse proxy.
-Note that there can be distinct terminators for individual layers of network stack.
-E.g., one for TLS and another for HTTP.
 
 # Sticky Protocol Identifiers
 
@@ -189,7 +172,7 @@ exposed by TLS 1.3, QUIC has its own connection identifier (CID) used to permit 
 
 <!-- SCTP: multihome (IP sending addresses in INIT chunks, this is not a mandatory parameter as per RFC4960), Initiate tag (used across multiple addresses), Address Families -->
 <!-- RTP: application performance reporting -->
-<!-- SRTP: ??? -->
+<!-- SRTP: ??? -->  
 
 ## Application Layer:
 
@@ -203,12 +186,12 @@ The ETag header field {{RFC7232}} enables applications to uniquely reference
 a resource which the client may cache. Applications may return unique
 reference tokens to distinct clients.
 
-- DNS ((CITE)): SRV records often contain human-readable information specific to 
+- DNS {{RFC1035}}: SRV records often contain human-readable information specific to 
 particular devices, clients, or users. For example, printers may advertise
 its services with SRV records that contain a human-readable instance name.
 These are often not rotated as services change.
 
-- NTP ((CITE)): By default, mode 3 for NTP -- client to server -- sends several 
+- NTP {{RFC5905}}: By default, mode 3 for NTP -- client to server -- sends several 
 source-specific fields in the clear to NTP servers, including: timestamps, poll, 
 and precision. These fields should be left empty or randomized as per {{I-D.ietf-ntp-data-minimization}}.
 Other fields that may link to clients include: Stratum, Root Delay, Root Dispersion, 
@@ -225,16 +208,38 @@ Ref ID, Ref Timestamp, Origin Timestamp, and Receive Timestamp.
 <!-- SNMP: ??? -->
 <!-- ICMP: ??? -->
 
+# Identifier Scope and Threat Model
+
+Not all packet identifiers are visible end-to-end in a client-server
+interaction. For example, MAC addresses are only visible within local subnets.
+IP addresses are only visible between endpoints. (In systems such as Tor,
+source and destination addresses change at each circuit hop.) Thus, identifier linkability
+depends on the threat model under consideration. Off-path adversaries are not considered a problem since
+they do not have access to packets in flight. On-path adversaries may exist at various locations
+relative to an endpoint (sender or receiver) on a path, e.g., in a local subnet, as an intermediate router
+or middlebox between two endpoints, or as a TLS terminating reverse proxy. In this document, we categorize
+these three types of adversaries as follows:
+
+1. Local: An on-path adversary belonging to the same local subnet as an endpoint, e.g., a switch.
+2. Intermediate: An on-path adversary that observes datagrams in flight but does not
+terminate a (TCP or TLS) connection, e.g., a middlebox or performance enhancing proxy (PEP).
+3. Terminator: An on-path adversary that terminates a connection, e.g., a TLS-terminating reverse proxy.
+Note that there can be distinct terminators for individual layers of network stack.
+E.g., one for TLS and another for HTTP.
+
+The scope of an identifier includes are all other protocols and layers observable by the same
+adversary. 
+
 # Limiting Linkable Identifiers
 
 The introductory example illustrating packet linkability using MAC addresses is one of many
 possible ways in which an attacker may link packets. As another hypothetical example, assume that
-IP address and MAC addresses were properly rotated. Moreover, assume TLS session IDs were reused
-over time, as shown below.
+IP address and MAC addresses were properly rotated, whereas TLS session identifiers were 
+reused over time, as shown below.
 
 ~~~
 +---------------+        +---------------+
-|TLS SessionID X<-------->TLS SessionID X|
+| TLS Session X <--------> TLS Session X |
 +---------------+        +---------------+
 |      ...      |  ....  |      ...      |
 +---------------+        +---------------+
@@ -256,14 +261,11 @@ then connection lifetimes would be limited to this window.
 
 A more sensible policy would be to restrict identifier rotation to layers which are exposed
 to the same adversary. For example, origin MAC addresses may not be visible to the destination.
-In this case, rotating IP addresses and TLS session IDs is not required to prevent packet
-linkability by an adversary who does not see the origin MAC address. A practical threat model
+In this case, rotating IP addresses and TLS session identifiers is not required to prevent packet
+linkability by an adversary who does not see the origin MAC address. A realistic threat model
 is one in which IP- to TLS-layer information is exposed to the same on-path adversary. 
 Identifiers beneath IP are visible to local adversaries, which may not be an issue, and those
-above TLS are visible to authenticated peers. 
-
-The scope of an identifier includes are all other protocols and layers observable by the same
-adversary. 
+above TLS are visible to authenticated peers.
 
 ## Time and Path Linkability
 
@@ -275,17 +277,18 @@ linkability, respectively.
 Time linkability is arguably simpler to mitigate, since new connections over time may opt to use
 new identifiers. For example, instead of resuming a TLS session with an existing session ID, a
 client may initiate a fresh handshake. As a simple rule, if an identifier in the same scope changes,
-endpoints SHOULD use fresh identifiers for all other protocols in that scope. This means that
-new TLS sessions SHOULD be initiated from an endpoint with a fresh MAC address, IP address, and
-TCP source port. Note that clients behind NATs may not need to generate a fresh MAC or IP address,
-as they enjoy some measure of anonymity by design.
+endpoints SHOULD use fresh identifiers for all other protocols in that scope. This means that, for
+identifiers visible to intermediate adversaries, new TLS sessions SHOULD be initiated from an endpoint 
+with a fresh IP address and TCP source port. Note that clients behind NATs may not need to generate 
+a fresh IP address, as they enjoy some measure of anonymity by design. If local adversaries were considered
+part of the threat model, then a fresh MAC address may also be needed.
 
 In contrast, path linkability is more difficult to achieve, as it requires using fresh identifiers
 for each protocol field. This may not always be technically feasible. For example, DNS query names
 are also intentionally used as the TLS SNI. Moreover, protocols such as QUIC explicitly try to enable 
-path linkability via connection-level identifiers (CIDs) to support multihoming endpoints. This makes 
-path linkability impossible to mitigate. However, as multiple, disjoint paths may be operated by 
-different entities (e.g., ISPs), collusion may be less common.
+path linkability via connection-level identifiers (CIDs) to support multihoming or mobile endpoints. 
+This makes path linkability impossible to mitigate. However, as multiple, disjoint paths may be 
+operated by different entities (e.g., ISPs), collusion may be less common.
 
 # Timing Considerations
 
@@ -305,9 +308,11 @@ This document doe snot introduce any new security protocol.
 
 # Privacy Considerations
 
-TODO
+This document describes considerations and suggestions for improving privacy in the context of many 
+IETF protocols. It does not introduce any new features or protocol behavior that would adversely impact
+privacy.
 
 # Acknowledgments
 
-TODO
+The authors thank Martin Thompson and Brian Trammell for comments on earlier versions of this document.
 

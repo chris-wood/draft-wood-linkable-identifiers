@@ -4,8 +4,8 @@
 
 Network Working Group                                            C. Wood
 Internet-Draft                                                Apple Inc.
-Intended status: Informational                             June 15, 2018
-Expires: December 17, 2018
+Intended status: Informational                             July 16, 2018
+Expires: January 17, 2019
 
 
                           Linkable Identifiers
@@ -13,16 +13,17 @@ Expires: December 17, 2018
 
 Abstract
 
-   Rotating public identifiers is often encouraged as best practice to
-   protect against privacy violations.  For example, regular MAC address
-   randomization is a technique implemented to prevent device tracking
-   across time and space.  Other protocols beyond those in the link
-   layer also have public identifiers or parameters that should rotate
-   over time.  This document surveys such privacy-related identifiers
-   exposed by common Internet protocols at various layers in a network
-   stack.  It provides advice for rotating linked identifiers such that
-   privacy violations do not occur while rotating one identifier and
-   neglecting to rotate a related identifier.
+   Rotating public identifiers is encouraged as best practice as a means
+   of protecting endpoint privacy.  For example, regular MAC address
+   randomization helps mitigate device tracking across time and space.
+   Other protocols beyond those in the link layer also have public
+   identifiers or parameters that should rotate over time, and in unison
+   with coupled protocol identifiers.  This document surveys such
+   privacy-related identifiers exposed by common Internet protocols at
+   various layers in a network stack.  It provides advice for rotating
+   linked identifiers such that privacy violations do not occur from
+   rotating one identifier while neglecting to rotate coupled
+   identifiers.
 
 Status of This Memo
 
@@ -39,7 +40,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on December 17, 2018.
+   This Internet-Draft will expire on January 17, 2019.
 
 Copyright Notice
 
@@ -49,15 +50,15 @@ Copyright Notice
    This document is subject to BCP 78 and the IETF Trust's Legal
    Provisions Relating to IETF Documents
    (http://trustee.ietf.org/license-info) in effect on the date of
-   publication of this document.  Please review these documents
 
 
 
-Wood                    Expires December 17, 2018               [Page 1]
+Wood                    Expires January 17, 2019                [Page 1]
 
-Internet-Draft            linkable-identifiers                 June 2018
+Internet-Draft            linkable-identifiers                 July 2018
 
 
+   publication of this document.  Please review these documents
    carefully, as they describe your rights and restrictions with respect
    to this document.  Code Components extracted from this document must
    include Simplified BSD License text as described in Section 4.e of
@@ -67,11 +68,11 @@ Internet-Draft            linkable-identifiers                 June 2018
 Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
-   2.  Identifier Scope and Threat Model . . . . . . . . . . . . . .   3
-   3.  Sticky Protocol Identifiers . . . . . . . . . . . . . . . . .   4
-     3.1.  Internet and Link Layer . . . . . . . . . . . . . . . . .   4
-     3.2.  Transport and Session Layer . . . . . . . . . . . . . . .   4
-     3.3.  Application Layer:  . . . . . . . . . . . . . . . . . . .   5
+   2.  Sticky Protocol Identifiers . . . . . . . . . . . . . . . . .   3
+     2.1.  Internet and Link Layer . . . . . . . . . . . . . . . . .   3
+     2.2.  Transport and Session Layer . . . . . . . . . . . . . . .   4
+     2.3.  Application Layer:  . . . . . . . . . . . . . . . . . . .   5
+   3.  Identifier Scope and Threat Model . . . . . . . . . . . . . .   5
    4.  Limiting Linkable Identifiers . . . . . . . . . . . . . . . .   6
      4.1.  Time and Path Linkability . . . . . . . . . . . . . . . .   7
    5.  Timing Considerations . . . . . . . . . . . . . . . . . . . .   8
@@ -105,15 +106,15 @@ Table of Contents
    Huitema et al.  [I-D.ietf-dnssd-privacy] say, "it is important that
    the obfuscation of instance names is performed at the right time, and
    that the obfuscated names change in synchrony with other identifiers,
-   such as MAC Addresses, IP Addresses or host names."  Consider the
 
 
 
-Wood                    Expires December 17, 2018               [Page 2]
+Wood                    Expires January 17, 2019                [Page 2]
 
-Internet-Draft            linkable-identifiers                 June 2018
+Internet-Draft            linkable-identifiers                 July 2018
 
 
+   such as MAC Addresses, IP Addresses or host names."  Consider the
    following example where this advice is not followed, wherein an IP
    address is changed yet the MAC address is not.
 
@@ -139,43 +140,7 @@ Internet-Draft            linkable-identifiers                 June 2018
    and also scanning packet traces captured from protocols in practice
    on common systems.
 
-2.  Identifier Scope and Threat Model
-
-   Not all packet or datagram identifiers are visible end-to-end in a
-   client-server interaction.  For example, MAC addresses are only
-   visible within on local subnets.  IP addresses are only visible
-   between endpoints.  (In systems such as Tor, source and destination
-   addresses change at each circuit hop.)  Thus, threats to identifier
-   linkability depend on the threat model under consideration.  Off-path
-   adversaries are generally not a problem since they do not have access
-   to datagrams in flight.  On-path adversaries may exist at various
-   locations relative to an endpoint (sender or receiver) on a path,
-   e.g., in a local subnet, as an intermediate router or middlebox
-   between two endpoints, or as a TLS terminating reverse proxy.  In
-   this document, we categorize these three types of adversaries as
-   follows:
-
-   1.  Local: An on-path adversary belonging to the same local subnet as
-       an endpoint, a switch.
-
-   2.  Intermediate: An on-path adversary that observes datagrams in
-       flight but does not terminate a (TCP or TLS) connection, e.g., a
-       middlebox or performance enhancing proxy (PEP).
-
-
-
-
-Wood                    Expires December 17, 2018               [Page 3]
-
-Internet-Draft            linkable-identifiers                 June 2018
-
-
-   3.  Terminator: An on-path adversary that terminates a connection,
-       e.g., a TLS-terminating reverse proxy.  Note that there can be
-       distinct terminators for individual layers of network stack.
-       E.g., one for TLS and another for HTTP.
-
-3.  Sticky Protocol Identifiers
+2.  Sticky Protocol Identifiers
 
    In this section, we survey existing protocols developed inside and
    out of the IETF, and identify sticky protocol identifiers for each.
@@ -188,7 +153,7 @@ Internet-Draft            linkable-identifiers                 June 2018
    (Our taxonomy may not match traditional OSI models, though we
    consider it sufficiently representative.)
 
-3.1.  Internet and Link Layer
+2.1.  Internet and Link Layer
 
    o  Ethernet: MAC addresses are fixed to specific devices.  Unless
       frequently rotated, they are sticky identifiers.
@@ -197,6 +162,14 @@ Internet-Draft            linkable-identifiers                 June 2018
       sticky identifiers when exposed on the network.  Privacy
       Extensions for Stateless Address Autoconfiguration [RFC4941]
       enhance IPv6 client privacy by, e.g., issuing new IPv6 /64
+
+
+
+Wood                    Expires January 17, 2019                [Page 3]
+
+Internet-Draft            linkable-identifiers                 July 2018
+
+
       prefixes every day.  The 64-bit IID suffix remains random to deter
       linkability.
 
@@ -204,7 +177,7 @@ Internet-Draft            linkable-identifiers                 June 2018
       connection identifiers instead of IP addresses.  They are required
       to rotate for each new SA.
 
-3.2.  Transport and Session Layer
+2.2.  Transport and Session Layer
 
    o  TCP [RFC0793]: TCP source ports may be sticky if reused across
       senders.  For example, most operating systems allocate allocate
@@ -217,15 +190,6 @@ Internet-Draft            linkable-identifiers                 June 2018
       reusing a destination port does not lead to decreased linkability.
       Moreover, with TCP Fast Open (TFO) [RFC7413], servers give clients
       plaintext cookies that must be re-used when resuming a TCP+TFO
-
-
-
-
-Wood                    Expires December 17, 2018               [Page 4]
-
-Internet-Draft            linkable-identifiers                 June 2018
-
-
       connection.  Clients do not modify these server cookies, which
       therefore means they can be tracked.
 
@@ -254,6 +218,14 @@ Internet-Draft            linkable-identifiers                 June 2018
       service countermeasures.  Servers issue stateless cookies to
       clients during a handshake, which must be replayed in cleartext by
       clients to prove ownership of its IP address.  (This is similar to
+
+
+
+Wood                    Expires January 17, 2019                [Page 4]
+
+Internet-Draft            linkable-identifiers                 July 2018
+
+
       TFO cookies described above.)  Additionally, DTLS is considering
       support of a static connection identifier (CID)
       [I-D.ietf-tls-dtls-connection-id], which permits client address
@@ -267,34 +239,26 @@ Internet-Draft            linkable-identifiers                 June 2018
       QUIC has its own connection identifier (CID) used to permit
       address mobility.
 
-3.3.  Application Layer:
+2.3.  Application Layer:
 
    o  HTTP [RFC2616]: While HTTP is a stateless protocol, it enables
       applications to define state-keeping mechanisms in header fields.
       The fields might carry the state itself or tokens pointing to
       state kept at the endpoints.  The Cookie header field [RFC6265] is
       de-facto the mechanism for web applications to uniquely identify
-
-
-
-Wood                    Expires December 17, 2018               [Page 5]
-
-Internet-Draft            linkable-identifiers                 June 2018
-
-
       their clients by generating a token and instructing the client to
       attach to any future requests.  The ETag header field [RFC7232]
       enables applications to uniquely reference a resource which the
       client may cache.  Applications may return unique reference tokens
       to distinct clients.
 
-   o  DNS ((CITE)): SRV records often contain human-readable information
-      specific to particular devices, clients, or users.  For example,
-      printers may advertise its services with SRV records that contain
-      a human-readable instance name.  These are often not rotated as
-      services change.
+   o  DNS [RFC1035]: SRV records often contain human-readable
+      information specific to particular devices, clients, or users.
+      For example, printers may advertise its services with SRV records
+      that contain a human-readable instance name.  These are often not
+      rotated as services change.
 
-   o  NTP ((CITE)): By default, mode 3 for NTP - client to server -
+   o  NTP [RFC5905]: By default, mode 3 for NTP - client to server -
       sends several source-specific fields in the clear to NTP servers,
       including: timestamps, poll, and precision.  These fields should
       be left empty or randomized as per
@@ -302,16 +266,54 @@ Internet-Draft            linkable-identifiers                 June 2018
       clients include: Stratum, Root Delay, Root Dispersion, Ref ID, Ref
       Timestamp, Origin Timestamp, and Receive Timestamp.
 
+3.  Identifier Scope and Threat Model
+
+   Not all packet identifiers are visible end-to-end in a client-server
+   interaction.  For example, MAC addresses are only visible within
+   local subnets.  IP addresses are only visible between endpoints.  (In
+   systems such as Tor, source and destination addresses change at each
+   circuit hop.)  Thus, identifier linkability depends on the threat
+   model under consideration.  Off-path adversaries are not considered a
+
+
+
+Wood                    Expires January 17, 2019                [Page 5]
+
+Internet-Draft            linkable-identifiers                 July 2018
+
+
+   problem since they do not have access to packets in flight.  On-path
+   adversaries may exist at various locations relative to an endpoint
+   (sender or receiver) on a path, e.g., in a local subnet, as an
+   intermediate router or middlebox between two endpoints, or as a TLS
+   terminating reverse proxy.  In this document, we categorize these
+   three types of adversaries as follows:
+
+   1.  Local: An on-path adversary belonging to the same local subnet as
+       an endpoint, e.g., a switch.
+
+   2.  Intermediate: An on-path adversary that observes datagrams in
+       flight but does not terminate a (TCP or TLS) connection, e.g., a
+       middlebox or performance enhancing proxy (PEP).
+
+   3.  Terminator: An on-path adversary that terminates a connection,
+       e.g., a TLS-terminating reverse proxy.  Note that there can be
+       distinct terminators for individual layers of network stack.
+       E.g., one for TLS and another for HTTP.
+
+   The scope of an identifier includes are all other protocols and
+   layers observable by the same adversary.
+
 4.  Limiting Linkable Identifiers
 
    The introductory example illustrating packet linkability using MAC
    addresses is one of many possible ways in which an attacker may link
    packets.  As another hypothetical example, assume that IP address and
-   MAC addresses were properly rotated.  Moreover, assume TLS session
-   IDs were reused over time, as shown below.
+   MAC addresses were properly rotated, whereas TLS session identifiers
+   were reused over time, as shown below.
 
    +---------------+        +---------------+
-   |TLS SessionID X<-------->TLS SessionID X|
+   | TLS Session X <--------> TLS Session X |
    +---------------+        +---------------+
    |      ...      |  ....  |      ...      |
    +---------------+        +---------------+
@@ -328,31 +330,29 @@ Internet-Draft            linkable-identifiers                 June 2018
    yet safe rule for removing packet linkability is to rotate all linked
    identifiers in unison.  Unfortunately, this strategy is problematic
    in practice.  It would imply terminating active connections whenever
+
+
+
+Wood                    Expires January 17, 2019                [Page 6]
+
+Internet-Draft            linkable-identifiers                 July 2018
+
+
    an identifier changes (otherwise, linkability remains trivial).  For
    example, if MAC addresses are rotated on a regular basis, e.g., every
-
-
-
-Wood                    Expires December 17, 2018               [Page 6]
-
-Internet-Draft            linkable-identifiers                 June 2018
-
-
    15 minutes, then connection lifetimes would be limited to this
    window.
 
    A more sensible policy would be to restrict identifier rotation to
    layers which are exposed to the same adversary.  For example, origin
    MAC addresses may not be visible to the destination.  In this case,
-   rotating IP addresses and TLS session IDs is not required to prevent
-   packet linkability by an adversary who does not see the origin MAC
-   address.  A practical threat model is one in which IP- to TLS-layer
-   information is exposed to the same on-path adversary.  Identifiers
-   beneath IP are visible to local adversaries, which may not be an
-   issue, and those above TLS are visible to authenticated peers.
-
-   The scope of an identifier includes are all other protocols and
-   layers observable by the same adversary.
+   rotating IP addresses and TLS session identifiers is not required to
+   prevent packet linkability by an adversary who does not see the
+   origin MAC address.  A realistic threat model is one in which IP- to
+   TLS-layer information is exposed to the same on-path adversary.
+   Identifiers beneath IP are visible to local adversaries, which may
+   not be an issue, and those above TLS are visible to authenticated
+   peers.
 
 4.1.  Time and Path Linkability
 
@@ -367,31 +367,31 @@ Internet-Draft            linkable-identifiers                 June 2018
    instead of resuming a TLS session with an existing session ID, a
    client may initiate a fresh handshake.  As a simple rule, if an
    identifier in the same scope changes, endpoints SHOULD use fresh
-   identifiers for all other protocols in that scope.  This means that
-   new TLS sessions SHOULD be initiated from an endpoint with a fresh
-   MAC address, IP address, and TCP source port.  Note that clients
-   behind NATs may not need to generate a fresh MAC or IP address, as
-   they enjoy some measure of anonymity by design.
+   identifiers for all other protocols in that scope.  This means that,
+   for identifiers visible to intermediate adversaries, new TLS sessions
+   SHOULD be initiated from an endpoint with a fresh IP address and TCP
+   source port.  Note that clients behind NATs may not need to generate
+   a fresh IP address, as they enjoy some measure of anonymity by
+   design.  If local adversaries were considered part of the threat
+   model, then a fresh MAC address may also be needed.
 
    In contrast, path linkability is more difficult to achieve, as it
    requires using fresh identifiers for each protocol field.  This may
    not always be technically feasible.  For example, DNS query names are
    also intentionally used as the TLS SNI.  Moreover, protocols such as
    QUIC explicitly try to enable path linkability via connection-level
-   identifiers (CIDs) to support multihoming endpoints.  This makes path
-   linkability impossible to mitigate.  However, as multiple, disjoint
-   paths may be operated by different entities (e.g., ISPs), collusion
-   may be less common.
+   identifiers (CIDs) to support multihoming or mobile endpoints.  This
+   makes path linkability impossible to mitigate.  However, as multiple,
+   disjoint paths may be operated by different entities (e.g., ISPs),
+   collusion may be less common.
 
 
 
 
 
-
-
-Wood                    Expires December 17, 2018               [Page 7]
+Wood                    Expires January 17, 2019                [Page 7]
 
-Internet-Draft            linkable-identifiers                 June 2018
+Internet-Draft            linkable-identifiers                 July 2018
 
 
 5.  Timing Considerations
@@ -414,11 +414,15 @@ Internet-Draft            linkable-identifiers                 June 2018
 
 8.  Privacy Considerations
 
-   TODO
+   This document describes considerations and suggestions for improving
+   privacy in the context of many IETF protocols.  It does not introduce
+   any new features or protocol behavior that would adversely impact
+   privacy.
 
 9.  Acknowledgments
 
-   TODO
+   The authors thank Martin Thompson and Brian Trammell for comments on
+   earlier versions of this document.
 
 10.  Normative References
 
@@ -429,30 +433,36 @@ Internet-Draft            linkable-identifiers                 June 2018
 
    [I-D.ietf-ntp-data-minimization]
               Franke, D. and A. Malhotra, "NTP Client Data
-              Minimization", draft-ietf-ntp-data-minimization-01 (work
-              in progress), July 2017.
+              Minimization", draft-ietf-ntp-data-minimization-02 (work
+              in progress), July 2018.
 
    [I-D.ietf-quic-transport]
               Iyengar, J. and M. Thomson, "QUIC: A UDP-Based Multiplexed
-              and Secure Transport", draft-ietf-quic-transport-12 (work
-              in progress), May 2018.
+              and Secure Transport", draft-ietf-quic-transport-13 (work
+              in progress), June 2018.
+
+
+
+
+
+Wood                    Expires January 17, 2019                [Page 8]
+
+Internet-Draft            linkable-identifiers                 July 2018
+
 
    [I-D.ietf-tls-dtls-connection-id]
               Rescorla, E., Tschofenig, H., Fossati, T., and T. Gondrom,
               "The Datagram Transport Layer Security (DTLS) Connection
-              Identifier", draft-ietf-tls-dtls-connection-id-00 (work in
-              progress), December 2017.
-
-
-
-Wood                    Expires December 17, 2018               [Page 8]
-
-Internet-Draft            linkable-identifiers                 June 2018
-
+              Identifier", draft-ietf-tls-dtls-connection-id-01 (work in
+              progress), July 2018.
 
    [RFC0793]  Postel, J., "Transmission Control Protocol", STD 7,
               RFC 793, DOI 10.17487/RFC0793, September 1981,
               <https://www.rfc-editor.org/info/rfc793>.
+
+   [RFC1035]  Mockapetris, P., "Domain names - implementation and
+              specification", STD 13, RFC 1035, DOI 10.17487/RFC1035,
+              November 1987, <https://www.rfc-editor.org/info/rfc1035>.
 
    [RFC2508]  Casner, S. and V. Jacobson, "Compressing IP/UDP/RTP
               Headers for Low-Speed Serial Links", RFC 2508,
@@ -475,6 +485,11 @@ Internet-Draft            linkable-identifiers                 June 2018
               DOI 10.17487/RFC5246, August 2008, <https://www.rfc-
               editor.org/info/rfc5246>.
 
+   [RFC5905]  Mills, D., Martin, J., Ed., Burbank, J., and W. Kasch,
+              "Network Time Protocol Version 4: Protocol and Algorithms
+              Specification", RFC 5905, DOI 10.17487/RFC5905, June 2010,
+              <https://www.rfc-editor.org/info/rfc5905>.
+
    [RFC6265]  Barth, A., "HTTP State Management Mechanism", RFC 6265,
               DOI 10.17487/RFC6265, April 2011, <https://www.rfc-
               editor.org/info/rfc6265>.
@@ -482,6 +497,14 @@ Internet-Draft            linkable-identifiers                 June 2018
    [RFC6347]  Rescorla, E. and N. Modadugu, "Datagram Transport Layer
               Security Version 1.2", RFC 6347, DOI 10.17487/RFC6347,
               January 2012, <https://www.rfc-editor.org/info/rfc6347>.
+
+
+
+
+Wood                    Expires January 17, 2019                [Page 9]
+
+Internet-Draft            linkable-identifiers                 July 2018
+
 
    [RFC6824]  Ford, A., Raiciu, C., Handley, M., and O. Bonaventure,
               "TCP Extensions for Multipath Operation with Multiple
@@ -498,13 +521,6 @@ Internet-Draft            linkable-identifiers                 June 2018
               Protocol (HTTP/1.1): Conditional Requests", RFC 7232,
               DOI 10.17487/RFC7232, June 2014, <https://www.rfc-
               editor.org/info/rfc7232>.
-
-
-
-Wood                    Expires December 17, 2018               [Page 9]
-
-Internet-Draft            linkable-identifiers                 June 2018
-
 
    [RFC7413]  Cheng, Y., Chu, J., Radhakrishnan, S., and A. Jain, "TCP
               Fast Open", RFC 7413, DOI 10.17487/RFC7413, December 2014,
@@ -541,20 +557,4 @@ Author's Address
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Wood                    Expires December 17, 2018              [Page 10]
+Wood                    Expires January 17, 2019               [Page 10]
