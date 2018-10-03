@@ -2,3 +2,4 @@
 .targets.mk
 lib/
 .bak
+venv/
