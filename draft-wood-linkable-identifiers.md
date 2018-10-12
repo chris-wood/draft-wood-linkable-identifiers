@@ -46,12 +46,12 @@ Rotating public identifiers is encouraged as best practice as a means of
 protecting endpoint privacy. For example, regular MAC address randomization
 helps mitigate device tracking across time and space.
 Other protocols beyond those in the link layer also have public identifiers
-or parameters that should rotate over time, and in unison with coupled protocol
-identifiers. This document surveys such privacy-related identifiers exposed by
-common Internet protocols at various layers in a network stack. It provides
-advice for rotating linked identifiers such that privacy violations do not
-occur from rotating one identifier while neglecting to rotate coupled
-identifiers.
+or parameters that should rotate over time, in unison with coupled protocol
+identifiers, and perhaps with application level identifiers. This document
+surveys such privacy-related identifiers exposed by common Internet protocols
+at various layers in a network stack. It provides advice for rotating linked
+identifiers such that privacy violations do not occur from rotating one
+identifier while neglecting to rotate coupled identifiers.
 
 --- middle
 
@@ -69,12 +69,15 @@ this association at the link layer.
 However, when multiple identifiers are simultaneously present on
 different layers of the stack, breaking the association at any
 individual layer might be insufficient to disassociate a host
-from their network traffic. Linkability can also occur across protocols.
+from their network traffic. Linkability can also occur across protocols and/or
+across layers.
 For example, TLS connections are commonly preceded by DNS queries for a
 particular endpoint (host name), e.g. example.com. Moreover, in the TLS
 handshake, this same host name is sent in cleartext in the Server Name
 Indication extension. Thus, observing either the DNS query or TLS SNI reveals
-information about the other.
+information about the other. Similarly, while an IP address of a device may
+rotate, if web browser cookies do not, then, a website can track the various
+IP addresses of a given cookie over time.
 
 Huitema et al. {{I-D.ietf-dnssd-privacy}} say, "it is important
 that the obfuscation of instance names is performed at the right time, and
@@ -122,8 +125,13 @@ sufficiently representative.)
 
 ## Internet and Link Layer
 
-- Ethernet: MAC addresses are fixed to specific devices. Unless frequently
-rotated, they are sticky identifiers.
+- Ethernet, 802.11, and Bluetooth: MAC addresses are fixed to specific devices.
+Unless frequently rotated, they are sticky identifiers. Simply rotating the MAC
+address may or may not be sufficient depending on other information sent at the
+protocol layer with the a (rotated) MAC address. For example, in 802.11,
+frames have an incrementing sequence number and if the sequence number is not
+reset in unison with a MAC address change, the sequence number can be used to
+re-correlate randomized MAC addresses.
 
 - IPv4 and IPv6: Static or infrequently rotating addresses are sticky
 identifiers when exposed on the network. Privacy Extensions for Stateless
@@ -136,6 +144,8 @@ identifiers instead of IP addresses. They are required to rotate for each new
 SA.
 
 <!-- ARP: ??? -->
+
+<!-- TMSI: Would we want to discuss 3GPP/LTE identifiers in this document??? -->
 
 ## Transport and Session Layer
 
@@ -226,15 +236,18 @@ Timestamp, Origin Timestamp, and Receive Timestamp.
 # Identifier Scope and Threat Model
 
 Not all packet identifiers are visible end-to-end in a client-server
-interaction. For example, MAC addresses are only visible within local subnets.
+interaction. For example, MAC addresses are only visible to those with physical
+access to the medium -- the local subnet for Ethernet and proximity for Wi-Fi;
+we will consider both of these "on-path" for the sake of this analysis.
 IP addresses are only visible between endpoints. (In systems such as Tor,
 source and destination addresses change at each circuit hop.) Thus, identifier
 linkability depends on the threat model under consideration. Off-path
-adversaries are not considered a problem since they do not have access to
-packets in flight. On-path adversaries may exist at various locations relative
-to an endpoint (sender or receiver) on a path, e.g., in a local subnet, as an
-intermediate router or middlebox between two endpoints, or as a TLS terminating
-reverse proxy. In this document, we categorize these three types of adversaries
+adversaries, e.g. those without physical access to the medium, are not
+considered a problem since they do not have access to packets in flight.
+On-path adversaries may exist at various locations relative to an endpoint
+(sender or receiver) on a path, e.g., in a local subnet, as an intermediate
+router or middlebox between two endpoints, or as a TLS terminating reverse
+proxy. In this document, we categorize these three types of adversaries
 as follows:
 
 1. Local: An on-path adversary belonging to the same local subnet as an
