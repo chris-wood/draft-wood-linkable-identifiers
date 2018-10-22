@@ -35,6 +35,7 @@ normative:
     RFC6973:
     RFC7232:
     RFC7413:
+    RFC8446:
     I-D.ietf-ntp-data-minimization:
     I-D.ietf-dnssd-privacy:
     I-D.ietf-quic-transport:
@@ -144,7 +145,6 @@ identifiers instead of IP addresses. They are required to rotate for each new
 SA.
 
 <!-- ARP: ??? -->
-
 <!-- TMSI: Would we want to discuss 3GPP/LTE identifiers in this document??? -->
 
 ## Transport and Session Layer
@@ -169,7 +169,7 @@ data sequence number (DSN) TCP option to allow receivers to deal with
 out-of-order subflow packet arrival. The union of packet DSNs across subflows
 should yield a contiguous packet number sequence.
 
-- TLS {{RFC5246}}: Prior to TLS 1.3, significant information is exposed during
+- TLS {{RFC5246}} {{RFC8446}}: Prior to TLS 1.3, significant information is exposed during
 TLS handshakes, including: session identifiers (or re-used PSK identifiers in
 TLS 1.3), timestamps, random nonces, supported ciphersuites, certificates, and
 extensions. Many of these are common across all TLS clients -- specifically,
@@ -196,7 +196,7 @@ identifier (CID) used to permit address mobility.
 
 <!-- SCTP: multihome (IP sending addresses in INIT chunks, this is not a mandatory parameter as per RFC4960), Initiate tag (used across multiple addresses), Address Families -->
 <!-- RTP: application performance reporting -->
-<!-- SRTP: ??? -->  
+<!-- SRTP: ??? -->
 
 ## Application Layer:
 
@@ -224,7 +224,6 @@ Timestamp, Origin Timestamp, and Receive Timestamp.
 
 <!-- - DHCP ((CITE)): broadcast discover requests, hardware type, client hardware address, IP addresses -->
 <!-- (http://www.networksorcery.com/enp/protocol/dhcp.htm), transaction identifier -->
-
 <!-- IMAP: ??? -->
 <!-- LDAP: ??? -->
 <!-- OAuth: ??? -->
@@ -345,7 +344,7 @@ This document has no request to IANA.
 
 # Security Considerations
 
-This document doe snot introduce any new security protocol.
+This document does not introduce any new security protocol.
 
 # Privacy Considerations
 
