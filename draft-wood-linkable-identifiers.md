@@ -354,5 +354,5 @@ protocol behavior that would adversely impact privacy.
 
 # Acknowledgments
 
-The authors thank Martin Thompson and Brian Trammell for comments on earlier
+The authors thank Martin Thomson and Brian Trammell for comments on earlier
 versions of this document.
